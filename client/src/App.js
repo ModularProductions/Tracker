@@ -160,15 +160,6 @@ class App extends Component {
                   <Link to="/signup">Sign up</Link>
                 </div>
               )}
-<<<<<<< HEAD
-=======
-              <PropsRoute exact path="/game" component={GamePage}
-                // gameData={newGameData}
-                toggleAuthenticateStatus={this.toggleAuthenticateStatus}
-                handleQuitButton={this.handleQuitButton.bind(this)}
-                handleLoginButton={this.handleLoginButton} 
-                loadData={this.loadData} />
->>>>>>> master
               <PropsRoute exact path="/" component={HomePage}
                 authenticated={this.state.authenticated}
                 toggleAuthenticateStatus={this.toggleAuthenticateStatus.bind()}
