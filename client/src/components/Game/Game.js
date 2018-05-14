@@ -16,12 +16,12 @@ const Game = props => (
         <Title>Labyrinth.js</Title>
       </Col>
       <Col xs={6} md={{size: 3, order: 1}} className="buttonArea">
-        {props.currentState.authenticated ? (<button  className="gameButton smButton" onClick={props.handleSaveButton(props.currentState)}>Save Game</button>) : (<button className="gameButton smButton" ><Link to="/login">Log In</Link></button>)}
+        {props.currentState.authenticated ? (<button  className="gameButton smButton" onClick={props.handleSaveButton(props.currentState)}>Save Game</button>) : (<button className="gameButton smButton" >Log In</button>)}
         <button className="gameButton smButton" onClick={props.viewHelpToggle}>Help</button>
       </Col>
       <Col xs={6} md={{size: 3, order: 5}} className="buttonArea">
-        <button className="gameButton smButton" onClick={props.viewAboutToggle} >About</button>
-        <button className="gameButton smButton"><Link to="/">Quit</Link></button>
+        <button className="gameButton smButton" onClick={props.viewAboutToggle}>About</button>
+        <button className="gameButton smButton">Quit</button>
       </Col>
       <Col xs={12} md={{size: 9, order: 4}}>
         <RoomDesc text={props.currentState.relay} />
