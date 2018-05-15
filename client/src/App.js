@@ -12,7 +12,7 @@ import {
 } from 'react-router-dom';
 
 import GamePage from './pages/GamePage.jsx';
-import HomePage from './pages/GamePage.jsx';
+import HomePage from './pages/HomePage.jsx';
 
 import { 
   PrivateRoute, 
@@ -146,38 +146,15 @@ class App extends Component {
     return (
       <Wrapper>
         <MuiThemeProvider muiTheme={getMuiTheme()}>
-          <Router>
-            <div>
-              {/* {this.showGame()}        */}
-              {this.state.authenticated ? (
-                <div className="top-bar-right">
-                  <Link to="/dashboard">Dashboard</Link>
-                  <Link to="/logout">Log out</Link>
-                </div>
-              ) : (
-                <div className="top-bar-right">
-                  <Link to="/login">Log in</Link>
-                  <Link to="/signup">Sign up</Link>
-                </div>
-              )}
-              <PropsRoute exact path="/game" component={GamePage}
-                // gameData={newGameData}
-                toggleAuthenticateStatus={this.toggleAuthenticateStatus}
-                handleQuitButton={this.handleQuitButton.bind(this)}
-                handleLoginButton={this.handleLoginButton} 
-                loadData={this.loadData} />
-              <PropsRoute exact path="/" component={HomePage}
-                toggleAuthenticateStatus={this.toggleAuthenticateStatus.bind()}
-                handlenewGameButton={this.handleNewGameButton} 
-                handleLoadGame={this.handleLoadGame.bind(this)}
-                handleLoginButton={this.handleLoginButton.bind(this)} 
-                handleLogoutButton={this.handleLogoutButton} />
-              <PrivateRoute path="/dashboard" component={DashboardPage}/>
-              <LoggedOutRoute path="/login" component={LoginPage} toggleAuthenticateStatus={this.toggleAuthenticateStatus} />
-              <LoggedOutRoute path="/signup" component={SignUpPage}/>
-              <Route path="/logout" component={LogoutFunction}/>
-            </div>
-          </Router>
+          <GamePage 
+            authenticated={this.state.authenticated}
+            toggleAuthenticateStatus={this.toggleAuthenticateStatus.bind(this)}
+            handleNewGameButton={this.handleNewGameButton.bind(this)} 
+            handleLoadGame={this.handleLoadGame.bind(this)}
+            handleLoginButton={this.handleLoginButton.bind(this)} 
+            handleQuitButton={this.handleQuitButton.bind(this)}
+            handleLogoutButton={this.handleLogoutButton.bind(this)} 
+            loadData={this.loadData} />
         </MuiThemeProvider>
       </Wrapper>
     )
