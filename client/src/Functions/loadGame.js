@@ -6,7 +6,7 @@ export default function loadGame(prevState, props) {
   let Items = require("../Objects/ItemBuilder");
   let allCreatures = require("../Objects/CreatureBuilder");
   // place player's starting room position
-  let playerLocation = "nine";
+  let playerLocation = "two";
   // create player inventory
   let playerInventory = [];
 
