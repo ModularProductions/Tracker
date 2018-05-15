@@ -7,7 +7,7 @@ import Inventory from "../Inventory.jsx";
 import Equipment from "../Equipment.jsx";
 import Statistics from "../Statistics.jsx";
 import RoomDesc from "../RoomDesc.jsx";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 const Game = props => (
   <Container >
@@ -16,7 +16,13 @@ const Game = props => (
         <Title>Labyrinth.js</Title>
       </Col>
       <Col xs={6} md={{size: 3, order: 1}} className="buttonArea">
-        {props.currentState.authenticated ? (<button  className="gameButton smButton" onClick={props.handleSaveButton(props.currentState)}>Save Game</button>) : (<button className="gameButton smButton" >Log In</button>)}
+
+        {props.currentState.authenticated ? (
+          <button  className="gameButton smButton" onClick={props.handleSaveButton(props.currentState)}>Save Game</button>
+        ) : (
+          <button className="gameButton smButton" >Log In</button>
+        )}
+
         <button className="gameButton smButton" onClick={props.viewHelpToggle}>Help</button>
       </Col>
       <Col xs={6} md={{size: 3, order: 5}} className="buttonArea">
