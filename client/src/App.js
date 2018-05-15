@@ -146,15 +146,15 @@ class App extends Component {
     return (
       <Wrapper>
         <MuiThemeProvider muiTheme={getMuiTheme()}>
-              <GamePage 
-                authenticated={this.state.authenticated}
-                toggleAuthenticateStatus={this.toggleAuthenticateStatus.bind(this)}
-                handleNewGameButton={this.handleNewGameButton.bind(this)} 
-                handleLoadGame={this.handleLoadGame.bind(this)}
-                handleLoginButton={this.handleLoginButton.bind(this)} 
-                handleQuitButton={this.handleQuitButton.bind(this)}
-                handleLogoutButton={this.handleLogoutButton.bind(this)} 
-                loadData={this.loadData} />
+          <GamePage 
+            authenticated={this.state.authenticated}
+            toggleAuthenticateStatus={this.toggleAuthenticateStatus.bind(this)}
+            handleNewGameButton={this.handleNewGameButton.bind(this)} 
+            handleLoadGame={this.handleLoadGame.bind(this)}
+            handleLoginButton={this.handleLoginButton.bind(this)} 
+            handleQuitButton={this.handleQuitButton.bind(this)}
+            handleLogoutButton={this.handleLogoutButton.bind(this)} 
+            loadData={this.loadData} />
         </MuiThemeProvider>
       </Wrapper>
     )
