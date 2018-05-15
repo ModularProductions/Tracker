@@ -5,26 +5,26 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import "./App.css";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link
-} from 'react-router-dom';
+// import {
+//   BrowserRouter as Router,
+//   Route,
+//   Link
+// } from 'react-router-dom';
 
 import GamePage from './pages/GamePage.jsx';
-import HomePage from './pages/HomePage.jsx';
+// import HomePage from './pages/HomePage.jsx';
 
-import { 
-  PrivateRoute, 
-  PropsRoute, 
-  LoggedOutRoute 
-} from './components/Routes';
+// import { 
+//   PrivateRoute, 
+//   PropsRoute, 
+//   LoggedOutRoute 
+// } from './components/Routes';
 
 // user auth components
-import LoginPage from './pages/LoginPage.jsx';
-import LogoutFunction from './pages/LogoutFunction.jsx';
-import SignUpPage from './pages/SignUpPage.jsx';
-import DashboardPage from './pages/DashboardPage.jsx';
+// import LoginPage from './pages/LoginPage.jsx';
+// import LogoutFunction from './pages/LogoutFunction.jsx';
+// import SignUpPage from './pages/SignUpPage.jsx';
+// import DashboardPage from './pages/DashboardPage.jsx';
 
 import Auth from './utils/Auth';
 
@@ -105,15 +105,15 @@ class App extends Component {
   // *
   // * HANDLE USER AUTHENTICATION
   // *
+  
+  componentDidMount() {
+    // check if user is logged in on refresh
+    this.toggleAuthenticateStatus()
+  }
 
   toggleAuthenticateStatus = () => {
     // check authenticated status and toggle state based on that
     this.setState({ authenticated: Auth.isUserAuthenticated() })
-  }
-
-  componentDidMount() {
-    // check if user is logged in on refresh
-    this.toggleAuthenticateStatus()
   }
 
   // showGame() {

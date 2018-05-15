@@ -36,34 +36,36 @@ class GamePage extends React.Component {
 
   state = {
     loadingFreshGame: true,
-    userCommand: "",
-    lastCommand: "",
     inProgress: true,
     authenticated: false,
     viewCharacter: false,
     viewAbout: false,
     viewHelp: false,
     isMobile: isMobile,
-    // below loaded in loadNewGame()
-    playerLocation: "two",
-    playerInventory: [],
-    room: {}, 
-    allCreatures: {},
-    relay: [],
-    health: 100,
-    attack: 0,
-    defense: 3,
-    moveCount: 0,
-    wielded: undefined,
-    head: undefined,
-    body: undefined,
-    arms: undefined,
-    legs: undefined,
-    modifiers: {
-      blind: undefined
-    },
-    options: {
-      verbose: true,
+    userCommand: "",
+    lastCommand: "",
+    // below loaded in loadGame(), below serves so components render
+    game: {
+      playerLocation: "two",
+      playerInventory: [],
+      room: {}, 
+      allCreatures: {},
+      relay: [],
+      health: 100,
+      attack: 0,
+      defense: 3,
+      moveCount: 0,
+      wielded: undefined,
+      head: undefined,
+      body: undefined,
+      arms: undefined,
+      legs: undefined,
+      modifiers: {
+        blind: undefined
+      },
+      options: {
+        verbose: true,
+      }
     }
   };
 
@@ -73,9 +75,7 @@ class GamePage extends React.Component {
   // * HANDLE PLAYER COMMAND INPUT
   // *
 
-  handleInputChange = event => {
-    this.setState({ userCommand: event.target.value });
-  };
+  handleInputChange = event => this.setState({ userCommand: event.target.value });
 
   async handleUserCommand(event) {
     event.preventDefault();
@@ -84,22 +84,22 @@ class GamePage extends React.Component {
     // initialize fresh datastream
     if (this.state.userCommand) {
       let currData = { relay: [], state: {
-        playerLocation: this.state.playerLocation,
-        playerInventory: this.state.playerInventory,
-        room: this.state.room, 
-        allCreatures: this.state.allCreatures,
-        relay: this.state.relay,
-        health: this.state.health,
-        attack: this.state.health,
-        defense: this.state.defense,
-        moveCount: this.state.moveCount,
-        wielded: this.state.wielded,
-        head: this.state.head,
-        body: this.state.body,
-        arms: this.state.arms,
-        legs: this.state.legs,
-        modifiers: this.state.modifiers,
-        options: this.state.modifiers
+        playerLocation: this.state.game.playerLocation,
+        playerInventory: this.state.game.playerInventory,
+        room: this.state.game.room, 
+        allCreatures: this.state.game.allCreatures,
+        relay: this.state.game.relay,
+        health: this.state.game.health,
+        attack: this.state.game.health,
+        defense: this.state.game.defense,
+        moveCount: this.state.game.moveCount,
+        wielded: this.state.game.wielded,
+        head: this.state.game.head,
+        body: this.state.game.body,
+        arms: this.state.game.arms,
+        legs: this.state.game.legs,
+        modifiers: this.state.game.modifiers,
+        options: this.state.game.modifiers
       }, takesTime: false };
       console.log("*** command entered:", this.state.userCommand, "***");
 
@@ -112,8 +112,8 @@ class GamePage extends React.Component {
 
       // advance game time, resolve entity action
       if (currData.takesTime) {
-        currData.state.moveCount++; 
         currData = creaturesMove(currData);
+        currData.state.moveCount++; 
       }
 
       // incorporate datastream into component state
@@ -162,19 +162,19 @@ class GamePage extends React.Component {
           <ModalHeader toggle={this.viewCharacterToggle}>You</ModalHeader>
           <ModalBody>
             <Statistics 
-              health={this.state.health}
-              attack={this.state.attack} 
-              defense={this.state.defense} 
-              moveCount={this.state.moveCount}
+              health={this.state.game.health}
+              attack={this.state.game.attack} 
+              defense={this.state.game.defense} 
+              moveCount={this.state.game.moveCount}
             />
             <Equipment 
-              wielded={this.state.wielded} 
-              head={this.state.head} 
-              body={this.state.body} 
-              arms={this.state.arms} 
-              legs={this.state.legs} 
+              wielded={this.state.game.wielded} 
+              head={this.state.game.head} 
+              body={this.state.game.body} 
+              arms={this.state.game.arms} 
+              legs={this.state.game.legs} 
             />
-            <Inventory inventory={this.state.playerInventory}/>
+            <Inventory inventory={this.state.game.playerInventory}/>
           </ModalBody>
         </Modal>
         <About 
@@ -182,7 +182,7 @@ class GamePage extends React.Component {
         <Help 
           viewHelp={this.state.viewHelp} viewHelpToggle={this.viewHelpToggle.bind(this)}/>
         <Game 
-          currentState={this.state} 
+          currentState={this.state.game} 
           viewAboutToggle={this.viewAboutToggle.bind(this)}
           viewHelpToggle={this.viewHelpToggle.bind(this)}
           viewCharacterToggle={this.viewCharacterToggle.bind(this)}

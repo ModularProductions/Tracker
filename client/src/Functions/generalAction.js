@@ -4,6 +4,7 @@ import canSee from "./canSee";
 
 // * General actions
 export default function generalAction(words, currData) {
+  console.log(currData.state);
   let creaturesPresent = creaturesHere(currData.state.allCreatures, currData.state.playerLocation);
   switch (words[0]) {
     case "l" : case "look" : case "exa" : case "examine" :

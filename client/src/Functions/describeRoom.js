@@ -1,4 +1,4 @@
-import { creaturesHere, isEmpty } from "./utils";
+import { isEmpty } from "./utils";
 import canSee from "./canSee";
 
 // relay description of room and any present items, creatures, and exits
