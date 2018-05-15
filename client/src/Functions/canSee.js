@@ -10,7 +10,7 @@ export default function canSee(room, playerInv, creaturesPresent, modifiers, all
     if (ele.lightSource) light = true;
   });
   creaturesPresent.forEach(ele => {
-    for (let i = 0; i < allCreatures[ele].inventory.length; i++) {
+    for (let i = 0; i < currData.stateallCreatures[ele].inventory.length; i++) {
       if (allCreatures[ele].inventory[i].lightSource) {
         light = true; 
       }

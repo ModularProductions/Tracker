@@ -6,7 +6,7 @@ export default function takeItem (words, currData) {
 
   // helpers
   let creaturesPresent = creaturesHere(currData.state.allCreatures, currData.state.playerLocation);
-  const canSee = canPlayerSee(currData.state.room[currData.state.playerLocation], currData.state.playerInventory, creaturesPresent, currData.state.modifiers);
+  const canSee = canPlayerSee(currData.state.room[currData.state.playerLocation], currData.state.playerInventory, creaturesPresent, currData.state.modifiers, currData.state.allCreatures);
 
   // "take" subject is not stated, picking up first item in room inventory
   if (words.length === 1) {
