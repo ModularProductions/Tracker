@@ -1,5 +1,6 @@
 import takeItem from "./takeItem";
 import dropItem from "./dropItem";
+import searchItem from "./searchItem";
 
 // * Item actions
 
@@ -10,6 +11,9 @@ export default function itemAction(words, currData) {
     }
     case "drop" : case "discard" : {
       currData = dropItem(words, currData); break;
+    }
+    case "search" : {
+      currData = searchItem(words, currData); break;
     }
     default : 
       currData.relay.push("SYSTEM: Command not defined. - at itemAction(), words = '"+words.join(", "));

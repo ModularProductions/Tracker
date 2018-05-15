@@ -56,10 +56,10 @@ export function isEmpty(obj) {
 
 // collects creatures present at playerLocation
 export function creaturesHere(allCreatures, playerLocation) {
-  let creaturesPresent = {};
+  let creaturesPresent = [];
   for (let thisCreature in allCreatures) {
     if (allCreatures[thisCreature].location === playerLocation) {
-      creaturesPresent[thisCreature] = allCreatures[thisCreature];
+      creaturesPresent.push(thisCreature);
     };
   }
   return creaturesPresent;

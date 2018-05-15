@@ -19,7 +19,7 @@ function Creature(
 let cat = new Creature(
   "two", // location
   "small cat", // shortName
-  "A small gray and white cat. She seems supremely uninterested in your presence.", // lookDesc
+  "A small gray and white cat wearing quite a fancy collar. She seems supremely uninterested in your presence, but might let you take a closer look.", // lookDesc
   ["cat", "kitty", "kitten", "pussy", "animal"], // keywords
   100, // health
   40, // attack

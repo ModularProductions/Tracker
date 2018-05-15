@@ -1,9 +1,14 @@
 import { mergeObjects, creaturesHere } from "./utils";
 import describeRoom from "./describeRoom";
-import canSee from "./canSee";
+import canPlayerSee from "./canSee";
 
 // Determines if a move direction works out
 export default function move(who, direction, startingLocation, doorway, currData) {
+
+  // helpers
+  let creaturesPresent = creaturesHere(currData.state.allCreatures, currData.state.playerLocation);  
+  const canSee = canPlayerSee(currData.state.room[currData.state.playerLocation], currData.state.playerInventory, creaturesPresent, currData.state.modifiers, currData.state.allCreatures);
+
   currData.pass = false;
   // check if doorway blocked (only player will be run into this check)
   if (doorway.blocked) {
@@ -24,23 +29,21 @@ export default function move(who, direction, startingLocation, doorway, currData
       currData.state = mergeObjects(currData.state, { 
         playerLocation: doorway.to
       });
-      describeRoom(currData, creaturesHere(currData.state.allCreatures, currData.state.playerLocation))
+      describeRoom(currData, creaturesPresent)
       // console.log("move(player) - mergeObjects() returns", currData);
     } else {
       // handle successful creature move
-
       // set up relay for when creature enters/exits player's location
       if (doorway.to === currData.state.playerLocation) {
-        let creaturesPresent = creaturesHere(currData.state.allCreatures, currData.state.playerLocation);
         // set up relay for blind player
         if (who === "minotaur") {
-          if (canSee(currData.state.room[currData.state.playerLocation], currData.state.playerInventory, creaturesPresent, currData.state.modifiers)) {
+          if (canSee) {
             currData.relay.push("The Minotaur charges into the room!");
           } else {
             currData.relay.push("You feel a malevolent presence enter the room.");
           }
         } else {
-            if (canSee(currData.state.room[currData.state.playerLocation], currData.state.playerInventory, creaturesPresent, currData.state.modifiers)) {
+            if (canSee) {
               currData.relay.push("A "+who+" enters the room.");
             } else {
               currData.relay.push("You feel a presence enter the room. You hope it's gentle.");

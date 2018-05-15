@@ -143,14 +143,13 @@ let three = thisRoom;
 thisRoom = new Room(
   4,
   "Room Four",
-  "There are a few piles of dried leaves collected in the corners of this toom. On the wall is a small framed painting of a white house."
+  "This is Room 4."
 );
 thisRoom.exits = {
   ...thisRoom.exits,
   northeast: { ...thisRoom.exits.northeast, to: "seven" },
   west: { ...thisRoom.exits.west, to: "five" }
 };
-thisRoom.dark = true;
 let four = thisRoom;
 
 thisRoom = new Room(
@@ -173,7 +172,7 @@ thisRoom = new Room(
 thisRoom.exits = {
   ...thisRoom.exits,
   north: { to: "eight", minBlocked: true },
-  east: { ...thisRoom.exits.east, to: "seven", minBlocked: true, flavor: "You effortlessly pass through the wall. Cool." }
+  east: { ...thisRoom.exits.east, to: "seven", minBlocked: true, invisible: true, flavor: "You pass effortlessly through the wall. Cool." }
 };
 let six = thisRoom;
 
@@ -187,7 +186,7 @@ thisRoom.exits = {
   north: { to: "eight", blocked: "You put your hand on the iron gate. Yep, it's real. And locked." },
   east: { ...thisRoom.exits.east, to: "nine" },
   southwest: { ...thisRoom.exits.southwest, to: "four" },
-  west: { ...thisRoom.exits.west, to: "six", minBlocked: true, flavor: "You effortlessly pass through the wall. Cool." },
+  west: { ...thisRoom.exits.west, to: "six", minBlocked: true, invisible: true, flavor: "You pass effortlessly through the wall. Cool." },
   down: { ...thisRoom.exits.down, to: "ten" } 
 };
 let seven = thisRoom;
@@ -207,14 +206,16 @@ let eight = thisRoom;
 thisRoom = new Room(
   9,
   "Room Nine",
-  "This is Room 9."
+  "There are a pile of dried leaves collected in the corner of this room. On the wall is a small framed painting of a white house."
 );
 thisRoom.exits = {
   ...thisRoom.exits,
   south: { ...thisRoom.exits.south, to: "ten" },
   west: { ...thisRoom.exits.west, to: "seven" },
 };
+thisRoom.dark = true;
 let nine = thisRoom;
+
 
 thisRoom = new Room(
   10,

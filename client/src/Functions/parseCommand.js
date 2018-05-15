@@ -6,7 +6,7 @@ import generalAction from "./generalAction";
 // * Dictionaries - trigger command parsing, should be reflected in switch/case
 
 const uselessWords = [
-  "the", "a", "at"
+  "the", "a", "at", "to"
 ];
 
 const generalCommands = [
@@ -14,7 +14,7 @@ const generalCommands = [
 ];
 
 const itemCommands = [
-  "take", "get", "pick", "grab", "drop", "discard", "hold"
+  "take", "get", "pick", "grab", "drop", "discard", "hold", "search"
 ];
 
 const specialCommands = [

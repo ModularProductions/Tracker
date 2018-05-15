@@ -21,7 +21,7 @@ export default function dropItem(words, currData) {
           let found = currData.state.playerInventory[i].shortName;
           let item = currData.state.playerInventory.splice(i, 1);
           currData.state.room[currData.state.playerLocation].inventory.push(item[0]);
-          currData.relay.push("You drop the "+found+".");
+          currData.relay.push("You drop the "+found+". Surely you don't need it anymore.");
           currData.takesTime = true;
           currData.state = mergeObjects(currData.state, {
             playerInventory: currData.state.playerInventory,

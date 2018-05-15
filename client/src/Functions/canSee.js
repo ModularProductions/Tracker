@@ -1,6 +1,6 @@
 
 // checks if light source is present in room and player is not blind, returns boolean
-export default function canSee(room, playerInv, creaturesPresent, modifiers) {
+export default function canSee(room, playerInv, creaturesPresent, modifiers, allCreatures) {
   console.log("room =", room);
   let light = !room.dark;
   playerInv.forEach(ele => {
@@ -9,13 +9,13 @@ export default function canSee(room, playerInv, creaturesPresent, modifiers) {
   room.inventory.forEach(ele => {
     if (ele.lightSource) light = true;
   });
-  for (let thisCreature in creaturesPresent) {
-    for (let i = 0; i < creaturesPresent[thisCreature].inventory.length; i++) {
-      if (creaturesPresent[thisCreature].inventory[i].lightSource) {
+  creaturesPresent.forEach(ele => {
+    for (let i = 0; i < allCreatures[ele].inventory.length; i++) {
+      if (allCreatures[ele].inventory[i].lightSource) {
         light = true; 
       }
     }
-  }
+  })
   if (modifiers.blind === true) {
     light = false;
   }

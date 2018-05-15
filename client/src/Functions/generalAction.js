@@ -1,14 +1,18 @@
 import { creaturesHere } from "./utils";
 import examine from "./examine";
-import canSee from "./canSee";
+import canPlayerSee from "./canSee";
+  
 
 // * General actions
 export default function generalAction(words, currData) {
-  console.log(currData.state);
+
+  //helpers
   let creaturesPresent = creaturesHere(currData.state.allCreatures, currData.state.playerLocation);
+  const canSee = canPlayerSee(currData.state.room[currData.state.playerLocation], currData.state.playerInventory, creaturesPresent, currData.state.modifiers, currData.state.allCreatures);
+
   switch (words[0]) {
     case "l" : case "look" : case "exa" : case "examine" :
-      if (canSee(currData.state.room[currData.state.playerLocation], currData.state.playerInventory, creaturesPresent, currData.state.modifiers)) {
+      if (canSee) {
         currData = examine(words, currData);
       } else {
         currData.relay.push("You can't see anything!"); 
