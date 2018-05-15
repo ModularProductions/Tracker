@@ -112,6 +112,7 @@ class GamePage extends React.Component {
 
       // advance game time, resolve entity action
       if (currData.takesTime) {
+        currData.state.moveCount++; 
         currData = creaturesMove(currData);
       }
 
