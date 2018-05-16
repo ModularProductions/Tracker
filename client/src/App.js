@@ -1,78 +1,189 @@
 import React, { Component } from "react";
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import { Modal, ModalHeader, ModalBody } from "reactstrap";
+import About from "./components/About.jsx";
+import Help from "./components/Help.jsx";
+import { Input } from "./components/Form";
+import loadGame from "./Functions/loadGame";
+import updateState from "./Functions/updateState";
+import { updateScroll } from "./Functions/utils";
+import parseCommand from "./Functions/parseCommand";
+import creaturesMove from "./Functions/creaturesMove";
+import { Col, Row, Container } from "reactstrap";
+import Title from "./components/Title.jsx";
+import Inventory from "./components/Inventory.jsx";
+import Equipment from "./components/Equipment.jsx";
+import Statistics from "./components/Statistics.jsx";
+import RoomDesc from "./components/RoomDesc.jsx";
+import Auth from './utils/Auth';
+import Login from "./components/Login";
+import ButtonAreaOne from "./components/ButtonAreaOne"
+import ButtonAreaTwo from "./components/ButtonAreaTwo"
+import Footer from "./components/Footer"
+import Sidebar from "./components/Sidebar"
+import SavedGames from "./components/SavedGames"
 
 // theme modules
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import "./App.css";
-// import {
-//   BrowserRouter as Router,
-//   Route,
-//   Link
-// } from 'react-router-dom';
 
-import GamePage from './pages/GamePage.jsx';
-// import HomePage from './pages/HomePage.jsx';
-
-// import { 
-//   PrivateRoute, 
-//   PropsRoute, 
-//   LoggedOutRoute 
-// } from './components/Routes';
-
-// user auth components
-// import LoginPage from './pages/LoginPage.jsx';
-// import LogoutFunction from './pages/LogoutFunction.jsx';
-// import SignUpPage from './pages/SignUpPage.jsx';
-// import DashboardPage from './pages/DashboardPage.jsx';
-
-import Auth from './utils/Auth';
-
-import Wrapper from "./components/Wrapper/Wrapper";
+// checks if being viewed in mobile layout
+let isMobile = window.innerWidth < 768 ? true : false
 
 // remove tap delay, essential for MaterialUI to work properly
 injectTapEventPlugin();
 
-// let Item = require("./Objects/ItemBuilder");
-// let Creature = require("./Objects/CreatureBuilder");
-// let Room = require("./Objects/RoomBuilder");
-// let newGameData = {
-//   moveCount: 0,
-//   player: {
-//     location: ["two"],
-//     equipment: {
-//       wielded: undefined,
-//       head: undefined,
-//       body: undefined,
-//       arms: undefined,
-//       legs: undefined
-//     },
-//     inventory: [Item.cellPhone],
-//     stats: {
-//       health: 100,
-//       attack: 0,
-//       defense: 3
-//     },
-//     options: {
-//       verbose: true,
-//     }
-//   },
-//   room: Room,
-//   creatures: [Creature.cat, Creature.minotaur],
-//   textBuffer: []
-// };
-
 class App extends Component {
 
   state = {
-    userCommand: "",
+    loadData: undefined,
+    loadingFreshGame: true,
+    inProgress: true,
     authenticated: false,
-    loadData: undefined
+    viewCharacter: false,
+    viewAbout: false,
+    viewHelp: false,
+    viewUserScreen: true,
+    showLoginPage: true,
+    isMobile: isMobile,
+    userCommand: "",
+    lastCommand: "",
+    // below loaded in loadGame(), below exists so components render
+    game: {
+      playerLocation: "two",
+      playerInventory: [],
+      room: {}, 
+      allCreatures: {},
+      relay: [],
+      health: 100,
+      attack: 0,
+      defense: 3,
+      moveCount: 0,
+      wielded: undefined,
+      head: undefined,
+      body: undefined,
+      arms: undefined,
+      legs: undefined,
+      modifiers: {
+        blind: undefined
+      },
+      options: {
+        verbose: true,
+      }
+    }
+  }
+
+  handleUserCommand = this.handleUserCommand;  
+
+  componentDidMount() {
+    // check if user is logged in on refresh
+    this.toggleAuthenticateStatus()
+
+    // loads game data on first render, skips when components re-render
+    if (this.state.loadingFreshGame) {
+      console.log("loading fresh game");
+      // upon mounting of game component, populate rooms, creatures, and player with items
+      this.setState((prevState, props) => loadGame(prevState, props));
+      this.setState({ loadingFreshGame: false });
+    }
+  }
+  
+  componentWillUnmount() {
+    this.toggleAuthenticateStatus();
+    console.log("@GamePage unmount, userAuthenticated =", this.state.authenticated);
+  }
+
+  logOutUser = () => {
+    Auth.deauthenticateUser();
+    this.toggleAuthenticateStatus();
+    console.log("log out button fired");
+    console.log("auth =", this.state.authenticated);
+  }
+
+  showLoginPageToggle = () => {
+    this.setState({ showLoginPage: !this.state.showLoginPage });
+  }
+
+  refreshUserScreen = () => {
+    this.forceUpdate();
+  }
+
+  // *
+  // * HANDLE PLAYER COMMAND INPUT
+  // *
+
+  handleInputChange = event => this.setState({ userCommand: event.target.value });
+
+  async handleUserCommand(event) {
+    event.preventDefault();
+    // check for non-empty command input
+    
+    // initialize fresh datastream
+    if (this.state.userCommand) {
+      let currData = { relay: [], state: {
+        playerLocation: this.state.game.playerLocation,
+        playerInventory: this.state.game.playerInventory,
+        room: this.state.game.room, 
+        allCreatures: this.state.game.allCreatures,
+        relay: this.state.game.relay,
+        health: this.state.game.health,
+        attack: this.state.game.health,
+        defense: this.state.game.defense,
+        moveCount: this.state.game.moveCount,
+        wielded: this.state.game.wielded,
+        head: this.state.game.head,
+        body: this.state.game.body,
+        arms: this.state.game.arms,
+        legs: this.state.game.legs,
+        modifiers: this.state.game.modifiers,
+        options: this.state.game.modifiers
+      }, takesTime: false };
+      console.log("*** command entered:", this.state.userCommand, "***");
+
+      // add user command to relay
+      currData.relay.push("> "+this.state.userCommand);
+
+      // start command processing here      
+      currData = parseCommand(this.state.userCommand, currData);
+      // console.log("currData returned from parseCommand() =", currData);
+
+      // advance game time, resolve entity action
+      if (currData.takesTime) {
+        currData = creaturesMove(currData);
+        currData.state.moveCount++; 
+      }
+
+      // incorporate datastream into component state
+      await this.setState((prevState, props) => (updateState(prevState, props, currData)));
+
+      // assure roomDesc window is scrolled to bottom
+      updateScroll();
+
+    }
   }
 
   // *
   // * BUTTON HANDLING
   // *
+
+  viewCharacterToggle = () => {
+    this.setState({viewCharacter: !this.state.viewCharacter});
+  }
+
+  viewAboutToggle = () => {
+    this.setState({viewAbout: !this.state.viewAbout});
+  }
+
+  viewHelpToggle = () => {
+    this.setState({viewHelp: !this.state.viewHelp});
+  }
+
+  viewUserScreenToggle = () => {
+    this.setState({viewUserScreen: !this.state.viewUserScreen}, () => {
+      if (!this.state.viewUserScreen) updateScroll();
+    });
+  }
 
   handleNewGameButton = () => {
     console.log("New Game button firing");
@@ -102,99 +213,134 @@ class App extends Component {
 
   }
 
-  // *
-  // * HANDLE USER AUTHENTICATION
-  // *
-  
-  componentDidMount() {
-    // check if user is logged in on refresh
-    this.toggleAuthenticateStatus()
-  }
-
   toggleAuthenticateStatus = () => {
     // check authenticated status and toggle state based on that
     this.setState({ authenticated: Auth.isUserAuthenticated() })
   }
 
-  // showGame() {
-  //   if (this.state.inProgress === true) {
-  //     return (
-  //       <GamePage 
-  //         toggleAuthenticateStatus={this.toggleAuthenticateStatus}
-
-  //       />
-  //     )
-  //   } else {
-  //     return (
-  //       <div id="startScreen">
-  //         {/* <div className="buttonArea"> */}
-  //         {/* ASYNC DIFFICULTY HERE */}
-  //           {this.state.authenticated ? (
-  //             <div>
-  //             </div>
-  //           ) : (
-  //             <button className="gameButton smButton" onClick={() => this.handleLoginButton(this.state.login)}><Link to="/login">Log in</Link></button>
-  //           )}
-  //         {/* </div> */}
-  //         <button className="gameButton smButton" onClick={() => this.handleNewGameButton()}>Start New Game</button>
-  //       </div>
-  //     )
-  //   }
-  // }
-  
   render() {
     return (
-      <Wrapper>
-        <MuiThemeProvider muiTheme={getMuiTheme()}>
-          <GamePage 
-            authenticated={this.state.authenticated}
-            toggleAuthenticateStatus={this.toggleAuthenticateStatus.bind(this)}
-            handleNewGameButton={this.handleNewGameButton.bind(this)} 
-            handleLoadGame={this.handleLoadGame.bind(this)}
-            handleLoginButton={this.handleLoginButton.bind(this)} 
-            handleQuitButton={this.handleQuitButton.bind(this)}
-            handleLogoutButton={this.handleLogoutButton.bind(this)} 
-            loadData={this.loadData} />
-        </MuiThemeProvider>
-      </Wrapper>
+      <MuiThemeProvider muiTheme={getMuiTheme()}>
+        <Container > 
+          <Modal isOpen={this.state.viewCharacter} toggle={this.viewCharacterToggle} className="characterModal">
+            <ModalHeader toggle={this.viewCharacterToggle}>You</ModalHeader>
+            <ModalBody>
+              <Statistics 
+                health={this.state.game.health}
+                attack={this.state.game.attack} 
+                defense={this.state.game.defense} 
+                moveCount={this.state.game.moveCount}
+              />
+              <Equipment 
+                wielded={this.state.game.wielded} 
+                head={this.state.game.head} 
+                body={this.state.game.body} 
+                arms={this.state.game.arms} 
+                legs={this.state.game.legs} 
+              />
+              <Inventory inventory={this.state.game.playerInventory}/>
+            </ModalBody>
+          </Modal>
+          <About 
+            viewAbout={this.state.viewAbout}viewAboutToggle={this.viewAboutToggle}
+          />
+          <Help 
+            viewHelp={this.state.viewHelp} viewHelpToggle={this.viewHelpToggle}
+          />
+          <Row className="no-gutters">
+            <Col xs={12} md={{size: 9, order: 2}}>
+              <Title>Labyrinth.js</Title>
+            </Col>
+            <Col xs={6} md={{size: 3, order: 1}} className="buttonArea">
+              {this.state.viewUserScreen ? (
+                <div></div>
+              ) : (
+                <ButtonAreaOne
+                  authenticated={this.state.authenticated} 
+                  handleSaveButton={this.handleSaveButton}
+                  viewUserScreenToggle={this.viewUserScreenToggle}
+                  viewHelpToggle={this.viewHelpToggle}
+                />
+              )}
+            </Col> 
+            <Col xs={6} md={{size: 3, order: 5}} className="buttonArea">
+              {this.state.viewUserScreen ? (
+                <div></div>
+              ) : (
+                <ButtonAreaTwo
+                  authenticated={this.state.authenticated} 
+                  toggleAuthenticateStatus={this.toggleAuthenticateStatus}
+                  viewUserScreenToggle={this.viewUserScreenToggle}
+                  viewAboutToggle={this.viewAboutToggle}
+                />
+              )}
+            </Col> 
+            <Col xs={12} md={{size: 9, order: 4}}>
+              {this.state.viewUserScreen ? (
+                <Login 
+                authenticated={this.state.authenticated} 
+                viewUserScreenToggle={this.viewUserScreenToggle}
+                toggleAuthenticateState={this.toggleAuthenticateStatus} 
+                refreshUserScreen={this.refreshUserScreen}
+                />
+              ) : (
+                <RoomDesc text={this.state.game.relay} />
+              )}
+            </Col>
+            <Col xs={12} md={{size: 9, order: 6}}>
+              {this.state.viewUserScreen ? (
+                <Footer />
+              ) : (
+                <form className="userCommandLine">
+                  <div className="form-group">
+                    <label className="commandInput">>&nbsp;</label>
+                    <Input
+                      value={this.state.userCommand}
+                      onChange={this.handleInputChange}
+                      name="userCommand"
+                      type="text"
+                      id="command"
+                      data-lpignore="true"
+                      autoComplete="off"
+                      onClick={(e) => {this.handleUserCommand(e)}} 
+                    />
+                    <button type="submit" onClick={(e) => {this.handleUserCommand(e)}} className="btn btn-success d-none">Submit</button>
+                  </div>
+                </form>
+              )}
+            </Col>
+            <Col xs={12} className="d-block d-md-none">
+              {this.state.viewUserScreen ? (
+                <button className="gameButton viewSaveGamesButton" onClick={this.state.viewSaveGamesToggle}>View your Saved Games</button>
+              ) : (
+                <button className="gameButton viewCharacterButton" onClick={this.state.viewCharacterToggle}>Check Yourself</button>
+              )}
+            </Col>
+            <Col md={{size: 3, order: 3}} className="d-none d-md-block" id="sidebar">
+              {this.state.viewUserScreen ? (
+                <SavedGames 
+                  authenticated={this.state.authenticated}
+                />
+              ) : (
+                <Sidebar 
+                  wielded={this.state.game.wielded} 
+                  head={this.state.game.head} 
+                  body={this.state.game.body} 
+                  arms={this.state.game.arms} 
+                  legs={this.state.game.legs}
+                  health={this.state.game.health}
+                  attack={this.state.game.attack} 
+                  defense={this.state.game.defense} 
+                  moveCount={this.state.game.moveCount}
+                  inventory={this.state.game.playerInventory}
+                />
+              )}
+            </Col>
+          </Row>
+        </Container>
+      </ MuiThemeProvider>
     )
   };
-
-  // integrate this
-  // render() {
-  //   return (
-  //     <MuiThemeProvider muiTheme={getMuiTheme()}>
-  //       <Router>
-  //         <div>
-  //           <div className="top-bar">
-  //             <div className="top-bar-left">
-  //               <Link to="/">React App</Link>
-  //             </div>
-  //             {this.state.authenticated ? (
-  //               <div className="top-bar-right">
-  //                 <Link to="/dashboard">Dashboard</Link>
-  //                 <Link to="/logout">Log out</Link>
-  //               </div>
-  //             ) : (
-  //               <div className="top-bar-right">
-  //                 <Link to="/login">Log in</Link>
-  //                 <Link to="/signup">Sign up</Link>
-  //               </div>
-  //             )}
-  
-  //           </div>
-  
-  //           <PropsRoute exact path="/" component={HomePage} toggleAuthenticateStatus={this.toggleAuthenticateStatus} />
-  //           <PrivateRoute path="/dashboard" component={DashboardPage}/>
-  //           <LoggedOutRoute path="/login" component={LoginPage} toggleAuthenticateStatus={this.toggleAuthenticateStatus} />
-  //           <LoggedOutRoute path="/signup" component={SignUpPage}/>
-  //           <Route path="/logout" component={LogoutFunction}/>
-  //         </div>
-  
-  //       </Router>
-  //     </MuiThemeProvider>
-  //   )
-  // }
 
 }
 
