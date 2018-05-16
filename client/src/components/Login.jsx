@@ -271,9 +271,9 @@ class Login extends React.Component {
                 {this.SignUpForm()}
               </div>
             )}
-            <button className="gameButton smButton" onClick={this.props.viewUserScreenToggle}>Return to Game</button>
           </div>
         )}
+        <button className="gameButton smButton" onClick={this.props.viewUserScreenToggle}>Return to Game</button>
       </div>
     )
   }

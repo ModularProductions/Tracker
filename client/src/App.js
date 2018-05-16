@@ -180,7 +180,9 @@ class App extends Component {
   }
 
   viewUserScreenToggle = () => {
-    this.setState({viewUserScreen: !this.state.viewUserScreen});
+    this.setState({viewUserScreen: !this.state.viewUserScreen}, () => {
+      if (!this.state.viewUserScreen) updateScroll();
+    });
   }
 
   handleNewGameButton = () => {
