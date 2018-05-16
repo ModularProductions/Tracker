@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardTitle, CardText } from 'material-ui/Card';
-import Auth from "../utils/Auth";
-import LogoutFunction from "../pages/LogoutFunction";
 
 const Dashboard = ({ secretData, user }) => (
   <Card className="container">

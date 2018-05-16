@@ -1,7 +1,3 @@
-body {
-  padding: 0 !important;
-}
-
 .modal-content {
   color: rgb(129, 224, 248);
   background: rgb(37, 37, 37);
@@ -54,4 +50,174 @@ body {
 }
 
 button .close {
+}
+
+#userForms {
+  color: rgb(150, 227, 250);
+}
+
+body, html {
+  margin: 0;
+  padding: 0 !important;
+  font-family: sans-serif;
+  height: 100%;
+  background: black;
+  font-size: 2vmax;
+}
+
+.container {
+  /* width: 100%; */
+  margin: 0 auto;
+  box-sizing: border-box;
+  background-color: rgb(37, 37, 37);
+}
+
+h1 {
+  /* font-size: 2rem; */
+  text-align: center;
+  line-height: 5vmax;
+  height: 5vmax;
+  font-size: 3vmax;
+  margin: 0 auto;
+  background: black;
+}
+
+.row {
+  color: rgb(150, 227, 250);
+  margin: auto;
+}
+
+.gameButton {
+  padding: 0;
+  text-align: center;
+  font-size: 1.5vmax;
+  height: 5vmax;
+  /* font-size: 150%; */
+  background-color: #333;
+  color: rgb(150, 227, 250);
+  outline: solid 1px rgb(150, 227, 250);
+}
+
+.gameButton:hover {
+  color: rgb(182, 238, 255);
+  background: linear-gradient(#666, #333);
+}
+
+.smButton {
+  width: 50%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.viewCharacterButton {
+  width: 100%;
+  font-size: initial;
+}
+
+#roomDesc {
+  background: linear-gradient(#222, #000);
+  display: block;
+  width: 100%;
+  height: 73vmax;
+  padding: 0 .5rem 3vmax;
+  overflow: auto;
+  border: 1px solid rgb(150, 227, 250);
+}
+
+#roomDesc p {
+  margin-bottom: 8px;
+}
+
+#sidebar {
+  font-size: 1.5vmax;
+  background: radial-gradient(ellipse, #000, #222);
+}
+
+#sidebar p {
+  margin-bottom: .25rem;
+}
+
+#sidebar div {
+  padding: .5rem;
+}
+
+#sidebar h2 {
+  font-size: 2vmax;
+  text-align: center;
+  margin-bottom: .25vmax;
+}
+
+.form-group {
+  margin: 2vmax 0;
+}
+
+.commandInput {
+  margin: 0;
+  padding-left: 1vmax;
+  width: 3vmax;
+  height: 5vmax;
+  line-height: 5vmax;
+  vertical-align: bottom;
+  text-align: center;
+  border-left: 1px solid rgb(150, 227, 250);  
+  border-bottom: 1px solid rgb(150, 227, 250);
+  border-top: 1px solid rgb(150, 227, 250);
+  background-color: rgb(15, 15, 15);  
+}
+
+input[type="text"] {
+  height: 5vmax;
+  border-radius: 0;
+  background-color: rgb(15, 15, 15);
+  color: rgb(150, 227, 250);
+  width: Calc(100% - 3vmax);
+  display: inline-block;
+  padding-left: 0;
+  border-right: 1px solid rgb(150, 227, 250);
+  border-bottom: 1px solid rgb(150, 227, 250);
+  border-top: 1px solid rgb(150, 227, 250);
+  border-left: none;
+}
+
+input[type="text"]:focus {
+  background-color: rgb(15, 15, 15);
+  outline: none;
+  color: rgb(150, 227, 250);
+}
+
+/* Tablet Portrait */
+@media screen and (min-width: 768px) {
+  
+  .form-group {
+    margin: 0; 
+  }
+/* 
+  smButton {
+    width: 100px;
+  } */
+
+  .container {
+    margin-top: 3vmax;
+    padding: 0;
+    border-left: 1px solid rgb(150, 227, 250);
+  }
+
+  #roomDesc {
+    height: 50vmax;
+  }
+}
+
+/* Tablet Landscape */
+@media screen and (min-width: 992px) {
+
+}
+
+/* Desktop */
+@media screen and (min-width: 1200px) {
+
+}
+
+/* Big Desktop */
+@media screen and (min-width: 1800px) {
+
 }
