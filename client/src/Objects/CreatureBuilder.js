@@ -1,3 +1,4 @@
+import { moveRandom } from "../Functions/scripts";
 
 function Creature(
   location, shortName, lookDesc, keywords, health, attack, defense, script, attitude, doing
@@ -14,6 +15,7 @@ function Creature(
   this.doing = doing;
   this.inventory = [];
   this.modifiers = {};
+  this.moveRandom = moveRandom(currData);
 }
 
 let cat = new Creature(
@@ -24,7 +26,7 @@ let cat = new Creature(
   100, // health
   40, // attack
   50, // defense
-  ["moveRandom"], // script
+  ["wander"], // script
   "wander", // attitude
   "wandering around.", // currently doing
 );
@@ -38,7 +40,7 @@ let minotaur = new Creature(
   40, // health
   10, // attack
   8, // defense
-  ["moveRandom"], // script
+  ["wander"], // script
   "wander", // attitude
   "stomping around.", // currently doing
 );

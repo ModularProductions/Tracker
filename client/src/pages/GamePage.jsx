@@ -7,6 +7,7 @@ import Inventory from "../components/Inventory.jsx";
 import Equipment from "../components/Equipment.jsx";
 import Statistics from "../components/Statistics.jsx";
 import { Input } from "../components/Form";
+import UserScreen from "../pages/UserScreen.jsx";
 
 // import game functions
 import loadGame from "../Functions/loadGame";
@@ -37,14 +38,15 @@ class GamePage extends React.Component {
   state = {
     loadingFreshGame: true,
     inProgress: true,
-    authenticated: false,
+    authenticated: this.props.authenticated,
     viewCharacter: false,
     viewAbout: false,
     viewHelp: false,
+    viewUserScreen: false,
     isMobile: isMobile,
     userCommand: "",
     lastCommand: "",
-    // below loaded in loadGame(), below serves so components render
+    // below loaded in loadGame(), below exists so components render
     game: {
       playerLocation: "two",
       playerInventory: [],
@@ -141,70 +143,74 @@ class GamePage extends React.Component {
     this.setState({viewHelp: !this.state.viewHelp});
   }
 
-  handleSaveButton = data => {
-    console.log("Save button firing");
-    // API.saveState({
-    //   id: data.id,
-    //   headline: data.headline,
-    //   snippet: data.snippet,
-    //   datePublished: data.date,
-    //   url: data.url
-    // })
-    //   .then(res => console.log(res))
-    //   .catch(err => console.log(err))
-    // ;
-  };
+  viewUserScreenToggle = () => {
+    console.log('toggle hit')
+    this.setState({viewUserScreen: !this.state.viewUserScreen});
+  }
   
   render() {
     return (
       <div>
-        <Modal isOpen={this.state.viewCharacter} toggle={this.viewCharacterToggle} className="characterModal">
-          <ModalHeader toggle={this.viewCharacterToggle}>You</ModalHeader>
-          <ModalBody>
-            <Statistics 
-              health={this.state.game.health}
-              attack={this.state.game.attack} 
-              defense={this.state.game.defense} 
-              moveCount={this.state.game.moveCount}
-            />
-            <Equipment 
-              wielded={this.state.game.wielded} 
-              head={this.state.game.head} 
-              body={this.state.game.body} 
-              arms={this.state.game.arms} 
-              legs={this.state.game.legs} 
-            />
-            <Inventory inventory={this.state.game.playerInventory}/>
-          </ModalBody>
-        </Modal>
-        <About 
-          viewAbout={this.state.viewAbout}viewAboutToggle={this.viewAboutToggle.bind(this)} />
-        <Help 
-          viewHelp={this.state.viewHelp} viewHelpToggle={this.viewHelpToggle.bind(this)}/>
-        <Game 
-          currentState={this.state.game} 
-          viewAboutToggle={this.viewAboutToggle.bind(this)}
-          viewHelpToggle={this.viewHelpToggle.bind(this)}
-          viewCharacterToggle={this.viewCharacterToggle.bind(this)}
-          handleLoginButton={this.handleLoginButton}
-          handleSaveButton={this.handleSaveButton}>
-          <form className="userCommandLine">
-            <div className="form-group">
-              <label>>&nbsp;</label>
-              <Input
-                value={this.state.userCommand}
-                onChange={this.handleInputChange}
-                name="userCommand"
-                type="text"
-                id="command"
-                data-lpignore="true"
-                autoComplete="off"
-                onClick={(e) => {this.handleUserCommand(e)}} 
-              />
-              <button type="submit" onClick={(e) => {this.handleUserCommand(e)}} className="btn btn-success d-none">Submit</button>
-            </div>
-          </form>
-        </Game>
+        {this.state.viewUserScreen ? (
+          <UserScreen className="userScreen"
+            authenticated={this.props.authenticated} 
+            viewUserScreenToggle={this.viewUserScreenToggle}
+            toggleAuthenticateStatus={this.props.toggleAuthenticateStatus} 
+          />  
+        ) : (
+          <div>
+            <Modal isOpen={this.state.viewCharacter} toggle={this.viewCharacterToggle} className="characterModal">
+              <ModalHeader toggle={this.viewCharacterToggle}>You</ModalHeader>
+              <ModalBody>
+                <Statistics 
+                  health={this.state.game.health}
+                  attack={this.state.game.attack} 
+                  defense={this.state.game.defense} 
+                  moveCount={this.state.game.moveCount}
+                />
+                <Equipment 
+                  wielded={this.state.game.wielded} 
+                  head={this.state.game.head} 
+                  body={this.state.game.body} 
+                  arms={this.state.game.arms} 
+                  legs={this.state.game.legs} 
+                />
+                <Inventory inventory={this.state.game.playerInventory}/>
+              </ModalBody>
+            </Modal>
+            <About 
+              viewAbout={this.state.viewAbout}viewAboutToggle={this.viewAboutToggle.bind(this)} />
+            <Help 
+              viewHelp={this.state.viewHelp} viewHelpToggle={this.viewHelpToggle.bind(this)}/>
+            <Game 
+              authenticated={this.props.authenticated}
+              toggleAuthenticateStatus={this.props.toggleAuthenticateStatus.bind(this)}
+              currentState={this.state.game} 
+              viewUserScreenToggle={this.viewUserScreenToggle.bind(this)}
+              viewAboutToggle={this.viewAboutToggle.bind(this)}
+              viewHelpToggle={this.viewHelpToggle.bind(this)}
+              viewCharacterToggle={this.viewCharacterToggle.bind(this)}
+              handleLoginButton={this.handleLoginButton}
+              >
+              <form className="userCommandLine">
+                <div className="form-group">
+                  <label>>&nbsp;</label>
+                  <Input
+                    value={this.state.userCommand}
+                    onChange={this.handleInputChange}
+                    name="userCommand"
+                    type="text"
+                    id="command"
+                    data-lpignore="true"
+                    autoComplete="off"
+                    onClick={(e) => {this.handleUserCommand(e)}} 
+                  />
+                  <button type="submit" onClick={(e) => {this.handleUserCommand(e)}} className="btn btn-success d-none">Submit</button>
+                </div>
+              </form>
+            </Game>
+          </div>
+        )}
       </div>
     )
 

@@ -17,13 +17,14 @@ class LoginPage extends React.Component {
   
   componentDidMount(){
     const storedMessage = localStorage.getItem('successMessage');
-    let successMessage = '';Dylkan
+    let successMessage = '';
 
     if (storedMessage) {
       successMessage = storedMessage;
       localStorage.removeItem('successMessage');
     }
     this.setState({ successMessage });
+    console.log("LoginPage, this.state =", this.state);
   }
 
   componentWillUnmount(){
