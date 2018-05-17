@@ -26,10 +26,25 @@ export default function loadGame(prevState, props) {
       } 
     }
   };
-
-  // create initial relay
   let relay = [];
-  relay.push("Welcome to the game.");
+  
+  // create initial relay
+  const openingText = () => {
+    relay.push("");
+    relay.push("");
+    relay.push("");
+    relay.push("Welcome to Labyrinth");
+    relay.push("");
+    relay.push("Theseus was on his way to enter the Labyrinth and slay the Minotaur, but he was detained at a border crossing and now awaits his lawyer. Meanwhile, some confusion with a shared Uber ride has landed you at the gates of the maze, and the unlikely promise of a mobile charging station tempts you inside.")
+    relay.push("")
+    relay.push("This is a working model of a contemporary adaptation of the classic Interactive Fiction game style. Click the 'about' button for more information.")
+    relay.push("")
+    relay.push("")
+    relay.push("")
+    relay.push("")
+  }
+  openingText();
+
   
   let thisState = { 
     ...prevState,

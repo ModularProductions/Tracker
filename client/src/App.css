@@ -1,3 +1,14 @@
+.container {
+  padding: 0 0;
+}
+
+.home {
+  margin-top: 2rem;
+}
+
+.dashboard {
+  padding: 4rem 2rem;
+}
 .modal-content {
   color: rgb(129, 224, 248);
   background: rgb(37, 37, 37);
@@ -64,13 +75,6 @@
   margin: 0 auto;
 }
 
-button .close {
-}
-
-#userForms {
-  color: rgb(150, 227, 250);
-}
-
 body, html {
   margin: 0;
   padding: 0 !important;
@@ -97,6 +101,10 @@ h1 {
   font-size: 3vmax;
   margin: 0 auto;
   background: black;
+}
+
+h2 {
+  font-size: 2rem;
 }
 
 .row {
@@ -202,20 +210,16 @@ input[type="text"]:focus {
   color: rgb(150, 227, 250);
 }
 
-#home {
-  overflow: auto;
-}
-
 .user-form .container {
   text-align: center;
   background: black;
-  height: 30vmax;
   margin: 0;
 }
 
-/* .user-form {
-  height: 70vmax;
-} */
+.user-form {
+  height: auto;
+  overflow: auto;
+}
 
 .user-form input {
   margin-left: .5rem;
@@ -237,8 +241,9 @@ input[type="text"]:focus {
   text-align: right;
 }
 
-.user-form .footnote {
-  margin-top: 2rem;
+.footnote {
+  padding: 2rem 0;
+  margin-bottom: 0;
 }
 
 h5, h6, h7, h8 {

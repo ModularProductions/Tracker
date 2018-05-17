@@ -39,7 +39,7 @@ class App extends Component {
     viewCharacter: false,
     viewAbout: false,
     viewHelp: false,
-    viewUserScreen: true,
+    viewUserScreen: false,
     showLoginPage: true,
     isMobile: isMobile,
     userCommand: "",
@@ -89,16 +89,20 @@ class App extends Component {
     console.log("@GamePage unmount, userAuthenticated =", this.state.authenticated);
   }
 
-  logOutUser = () => {
-    Auth.deauthenticateUser();
-    this.toggleAuthenticateStatus();
-    console.log("log out button fired");
-    console.log("auth =", this.state.authenticated);
-  }
+  // logOutUser = () => {
+  //   Auth.deauthenticateUser();
+  //   this.toggleAuthenticateStatus();
+  //   console.log("log out button fired");
+  //   console.log("auth =", this.state.authenticated);
+  // }
 
-  showLoginPageToggle = () => {
-    this.setState({ showLoginPage: !this.state.showLoginPage });
-  }
+  logOutUser = () => {
+    console.log("logOutUser button clicked");
+    Auth.deauthenticateUser();
+    // this.setState({ secretData: '',
+    // user: {}, showForm: "login" });
+    this.forceUpdate;
+  };
 
   // *
   // * HANDLE PLAYER COMMAND INPUT
@@ -203,9 +207,10 @@ class App extends Component {
               authenticated={this.state.authenticated} 
               viewUserScreenToggle={this.viewUserScreenToggle}
               toggleAuthenticateStatus={this.toggleAuthenticateStatus} 
+              handleNewGameButton={this.handleNewGameButton} 
+              viewUserScreenToggle={this.viewUserScreenToggle}
+              logOutUser={this.logOutUser}
             />
-            <button className="gameButton smButton" onClick={this.viewUserScreenToggle}>Return to Game</button>
-            <button className="gameButton smButton" onClick={this.handleNewGameButton}>Start New Game</button>
           </div>
         ) : (
           <div>
