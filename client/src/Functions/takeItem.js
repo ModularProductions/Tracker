@@ -1,68 +1,56 @@
 import { creaturesHere, mergeObjects } from "./utils";
-import canPlayerSee from "./canSee";
 
 // * take item
 export default function takeItem (words, currData) {
 
   // helpers
   let creaturesPresent = creaturesHere(currData.state.allCreatures, currData.state.playerLocation);
-  const canSee = canPlayerSee(currData.state.room[currData.state.playerLocation], currData.state.playerInventory, creaturesPresent, currData.state.modifiers, currData.state.allCreatures);
 
   // "take" subject is not stated, picking up first item in room inventory
   if (words.length === 1) {
-    if (canSee) {
-      if (currData.state.room[currData.state.playerLocation].inventory.filter(item => (!item.feature)).length) {
-        let item = currData.state.room[currData.state.playerLocation].inventory.splice(0, 1);
-        currData.state.playerInventory = currData.state.playerInventory.concat(item);
-        console.log("TAKE player inv =", currData.state.playerInventory);
-        currData.relay.push("You pick up the "+item.shortName+".");
-        currData.takesTime = true;
-        console.log("takeItem(single) - mergeObjects() with ", currData.state);
-        currData.state = mergeObjects(currData.state, {
-          playerInventory: currData.state.playerInventory,
-          room: {
-            [currData.state.playerLocation]: { 
-              inventory: currData.state.room[currData.state.playerLocation].inventory,
-            }
+    if (currData.state.room[currData.state.playerLocation].inventory.filter(item => (!item.feature || !item.hidden)).length) {
+      let item = currData.state.room[currData.state.playerLocation].inventory.splice(0, 1);
+      currData.state.playerInventory = currData.state.playerInventory.concat(item);
+      currData.relay.push("You pick up the "+item[0].shortName+".");
+      currData.takesTime = true;
+      currData.state = mergeObjects(currData.state, {
+        playerInventory: currData.state.playerInventory,
+        room: {
+          [currData.state.playerLocation]: { 
+            inventory: currData.state.room[currData.state.playerLocation].inventory,
           }
-        });
-        return currData;
-      } else {
-        currData.relay.push("You don't see anything you can take.");
-        return currData;
-      } 
+        }
+      });
+      return currData;
     } else {
-      currData.relay.push("You can't see well enough to be greedy.");
-    }
+      currData.relay.push("You don't see anything you can take.");
+      return currData;
+    } 
   } else 
   if (words[1] === "all" || words[1] === "everything") {
     // "take" subject is all items in room
-    if (canSee) {
-      if (currData.state.room[currData.state.playerLocation].inventory.filter(item => (!item.feature)).length) {
-        let roomItems = currData.state.room[currData.state.playerLocation].inventory.filter(item => !item.feature);
-        currData.state.playerInventory = currData.state.playerInventory.concat(roomItems);
-        currData.relay.push("You pick up everything that's not nailed down.");
-        currData.takesTime = true;
-        currData.state = mergeObjects(currData.state, {
-          playerInventory: currData.state.playerInventory,
-          room: { 
-            [currData.state.playerLocation]: {
-              inventory: currData.state.room[currData.state.playerLocation].inventory.filter(item => item.feature)
-            }
+    if (currData.state.room[currData.state.playerLocation].inventory.filter(item => (!item.feature || !item.hidden)).length) {
+      let roomItems = currData.state.room[currData.state.playerLocation].inventory.filter(item => !item.feature);
+      currData.state.playerInventory = currData.state.playerInventory.concat(roomItems);
+      currData.relay.push("You pick up everything you see.");
+      currData.takesTime = true;
+      currData.state = mergeObjects(currData.state, {
+        playerInventory: currData.state.playerInventory,
+        room: { 
+          [currData.state.playerLocation]: {
+            inventory: currData.state.room[currData.state.playerLocation].inventory.filter(item => item.feature)
           }
-        });
-        return currData;
-      } else {
-        currData.relay.push("You don't see anything you can take.");
-        return currData;
-      } 
+        }
+      });
+      return currData;
     } else {
-      currData.relay.push("You can't see well enough to be greedy.");
-    }
+      currData.relay.push("You don't see anything you can take.");
+      return currData;
+    } 
   } else {
     // "take" subject is not "all", looking in room for item
     for (let i = 0; i < currData.state.room[currData.state.playerLocation].inventory.length; i++) {
-      if (currData.state.room[currData.state.playerLocation].inventory[i].keywords.includes(words[1])) {
+      if (currData.state.room[currData.state.playerLocation].inventory[i].keywords.includes(words[1]) && !currData.state.room[currData.state.playerLocation].inventory[i].hidden) {
         // item found in room
         // check if item is room feature (and not takeable)
         if (currData.state.room[currData.state.playerLocation].inventory[i].feature) {

@@ -67,7 +67,7 @@ function validateLoginForm(payload) {
   if (!isFormValid) {
     message = 'Check the form for errors.';
   }
-
+  
   return {
     success: isFormValid,
     message,
@@ -77,7 +77,9 @@ function validateLoginForm(payload) {
 
 router.post('/signup', (req, res, next) => {
   const validationResult = validateSignupForm(req.body);
+  console.log(validationResult)
   if (!validationResult.success) {
+    console.log('died1')
     return res.status(400).json({
       success: false,
       message: validationResult.message,
@@ -85,21 +87,21 @@ router.post('/signup', (req, res, next) => {
     });
   }
 
-
   return passport.authenticate('local-signup', (err) => {
     if (err) {
-      if (err.name === 'MongoError' && err.code === 11000) {
+      if (err.code === 11000) {
         // the 11000 Mongo code is for a duplication email error
         // the 409 HTTP status code is for conflict error
+        console.log('died2')
         return res.status(409).json({
           success: false,
-          message: 'Check the form for errors.',
+          message: 'Email already in use.',
           errors: {
             email: 'This email is already taken.'
           }
         });
       }
-
+      console.log('died3', err.name)
       return res.status(400).json({
         success: false,
         message: 'Could not process the form.'

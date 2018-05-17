@@ -19,13 +19,8 @@ import Auth from './utils/Auth';
 import Login from "./components/Login";
 import ButtonAreaOne from "./components/ButtonAreaOne"
 import ButtonAreaTwo from "./components/ButtonAreaTwo"
-import Footer from "./components/Footer"
 import Sidebar from "./components/Sidebar"
 import SavedGames from "./components/SavedGames"
-
-// theme modules
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import "./App.css";
 
 // checks if being viewed in mobile layout
@@ -105,10 +100,6 @@ class App extends Component {
     this.setState({ showLoginPage: !this.state.showLoginPage });
   }
 
-  refreshUserScreen = () => {
-    this.forceUpdate();
-  }
-
   // *
   // * HANDLE PLAYER COMMAND INPUT
   // *
@@ -128,7 +119,7 @@ class App extends Component {
         allCreatures: this.state.game.allCreatures,
         relay: this.state.game.relay,
         health: this.state.game.health,
-        attack: this.state.game.health,
+        attack: this.state.game.attack,
         defense: this.state.game.defense,
         moveCount: this.state.game.moveCount,
         wielded: this.state.game.wielded,
@@ -187,26 +178,11 @@ class App extends Component {
 
   handleNewGameButton = () => {
     console.log("New Game button firing");
-    this.setState({
-      inProgress: true,
-      loadData: undefined
+    this.setState((prevState, props) => loadGame(prevState, props), () => {
+      this.setState({viewUserScreen: !this.state.viewUserScreen}, () => {
+        if (!this.state.viewUserScreen) updateScroll();
+      })
     })
-  }
-
-  handleQuitButton = () => {
-    console.log("Quit button firing");
-    this.setState({
-      inProgress: false,
-      loadData: undefined
-    })
-  }
-
-  handleLoginButton = () => {
-    console.log("Login button firing");
-  }
-
-  handleLogoutButton = data => {
-    console.log("Logout button firing");
   }
 
   handleLoadGame = data => {
@@ -220,77 +196,68 @@ class App extends Component {
 
   render() {
     return (
-      <MuiThemeProvider muiTheme={getMuiTheme()}>
-        <Container > 
-          <Modal isOpen={this.state.viewCharacter} toggle={this.viewCharacterToggle} className="characterModal">
-            <ModalHeader toggle={this.viewCharacterToggle}>You</ModalHeader>
-            <ModalBody>
-              <Statistics 
-                health={this.state.game.health}
-                attack={this.state.game.attack} 
-                defense={this.state.game.defense} 
-                moveCount={this.state.game.moveCount}
-              />
-              <Equipment 
-                wielded={this.state.game.wielded} 
-                head={this.state.game.head} 
-                body={this.state.game.body} 
-                arms={this.state.game.arms} 
-                legs={this.state.game.legs} 
-              />
-              <Inventory inventory={this.state.game.playerInventory}/>
-            </ModalBody>
-          </Modal>
-          <About 
-            viewAbout={this.state.viewAbout}viewAboutToggle={this.viewAboutToggle}
-          />
-          <Help 
-            viewHelp={this.state.viewHelp} viewHelpToggle={this.viewHelpToggle}
-          />
-          <Row className="no-gutters">
-            <Col xs={12} md={{size: 9, order: 2}}>
-              <Title>Labyrinth.js</Title>
-            </Col>
-            <Col xs={6} md={{size: 3, order: 1}} className="buttonArea">
-              {this.state.viewUserScreen ? (
-                <div></div>
-              ) : (
+      <Container > 
+        {this.state.viewUserScreen ? (
+          <div className="home">
+            <Login 
+              authenticated={this.state.authenticated} 
+              viewUserScreenToggle={this.viewUserScreenToggle}
+              toggleAuthenticateStatus={this.toggleAuthenticateStatus} 
+            />
+            <button className="gameButton smButton" onClick={this.viewUserScreenToggle}>Return to Game</button>
+            <button className="gameButton smButton" onClick={this.handleNewGameButton}>Start New Game</button>
+          </div>
+        ) : (
+          <div>
+            <Modal isOpen={this.state.viewCharacter} toggle={this.viewCharacterToggle} className="characterModal">
+              <ModalHeader toggle={this.viewCharacterToggle}>You</ModalHeader>
+              <ModalBody>
+                <Statistics 
+                  health={this.state.game.health}
+                  attack={this.state.game.attack} 
+                  defense={this.state.game.defense} 
+                  moveCount={this.state.game.moveCount}
+                />
+                <Equipment 
+                  wielded={this.state.game.wielded} 
+                  head={this.state.game.head} 
+                  body={this.state.game.body} 
+                  arms={this.state.game.arms} 
+                  legs={this.state.game.legs} 
+                />
+                <Inventory inventory={this.state.game.playerInventory}/>
+              </ModalBody>
+            </Modal>
+            <About 
+              viewAbout={this.state.viewAbout} viewAboutToggle={this.viewAboutToggle}
+            />
+            <Help 
+              viewHelp={this.state.viewHelp} viewHelpToggle={this.viewHelpToggle}
+            />
+            <Row className="no-gutters">
+              <Col xs={12} md={{size: 9, order: 2}}>
+                <Title>Labyrinth.js</Title>
+              </Col>
+              <Col xs={6} md={{size: 3, order: 1}} className="buttonArea">
                 <ButtonAreaOne
                   authenticated={this.state.authenticated} 
                   handleSaveButton={this.handleSaveButton}
                   viewUserScreenToggle={this.viewUserScreenToggle}
                   viewHelpToggle={this.viewHelpToggle}
                 />
-              )}
-            </Col> 
-            <Col xs={6} md={{size: 3, order: 5}} className="buttonArea">
-              {this.state.viewUserScreen ? (
-                <div></div>
-              ) : (
+              </Col> 
+              <Col xs={6} md={{size: 3, order: 5}} className="buttonArea">
                 <ButtonAreaTwo
                   authenticated={this.state.authenticated} 
                   toggleAuthenticateStatus={this.toggleAuthenticateStatus}
                   viewUserScreenToggle={this.viewUserScreenToggle}
                   viewAboutToggle={this.viewAboutToggle}
                 />
-              )}
-            </Col> 
-            <Col xs={12} md={{size: 9, order: 4}}>
-              {this.state.viewUserScreen ? (
-                <Login 
-                authenticated={this.state.authenticated} 
-                viewUserScreenToggle={this.viewUserScreenToggle}
-                toggleAuthenticateState={this.toggleAuthenticateStatus} 
-                refreshUserScreen={this.refreshUserScreen}
-                />
-              ) : (
+              </Col> 
+              <Col xs={12} md={{size: 9, order: 4}}>
                 <RoomDesc text={this.state.game.relay} />
-              )}
-            </Col>
-            <Col xs={12} md={{size: 9, order: 6}}>
-              {this.state.viewUserScreen ? (
-                <Footer />
-              ) : (
+              </Col>
+              <Col xs={12} md={{size: 9, order: 6}}>
                 <form className="userCommandLine">
                   <div className="form-group">
                     <label className="commandInput">>&nbsp;</label>
@@ -307,21 +274,11 @@ class App extends Component {
                     <button type="submit" onClick={(e) => {this.handleUserCommand(e)}} className="btn btn-success d-none">Submit</button>
                   </div>
                 </form>
-              )}
-            </Col>
-            <Col xs={12} className="d-block d-md-none">
-              {this.state.viewUserScreen ? (
-                <button className="gameButton viewSaveGamesButton" onClick={this.state.viewSaveGamesToggle}>View your Saved Games</button>
-              ) : (
-                <button className="gameButton viewCharacterButton" onClick={this.state.viewCharacterToggle}>Check Yourself</button>
-              )}
-            </Col>
-            <Col md={{size: 3, order: 3}} className="d-none d-md-block" id="sidebar">
-              {this.state.viewUserScreen ? (
-                <SavedGames 
-                  authenticated={this.state.authenticated}
-                />
-              ) : (
+              </Col>
+              <Col xs={12} className="d-block d-md-none">
+                <button className="gameButton viewCharacterButton" onClick={this.viewCharacterToggle}>Check Yourself</button>
+              </Col>
+              <Col md={{size: 3, order: 3}} className="d-none d-md-block" id="sidebar">
                 <Sidebar 
                   wielded={this.state.game.wielded} 
                   head={this.state.game.head} 
@@ -334,13 +291,13 @@ class App extends Component {
                   moveCount={this.state.game.moveCount}
                   inventory={this.state.game.playerInventory}
                 />
-              )}
-            </Col>
-          </Row>
-        </Container>
-      </ MuiThemeProvider>
+              </Col>
+            </Row>
+          </div>
+        )}
+      </Container>
     )
-  };
+  }
 
 }
 

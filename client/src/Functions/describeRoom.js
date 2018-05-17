@@ -37,12 +37,13 @@ export default function describeRoom(currData, creaturesPresent) {
     for (let i = 0; i < currData.state.room[currData.state.playerLocation].inventory.length; i++) {
       let thisItem = currData.state.room[currData.state.playerLocation].inventory[i];
       // skip item, because it's a feature or hidden
-      if (thisItem.feature || thisItem.hidden) {
-      } else {
+      if (!thisItem.feature && !thisItem.hidden) {
         items.push("a "+currData.state.room[currData.state.playerLocation].inventory[i].shortName);
       }
     }
-    currData.relay.push("You see "+[items.slice(0, -1).join(', '), items.slice(-1)[0]].join(items.length < 2 ? '' : ' and ')+" here.");
+    if (items.length) {
+      currData.relay.push("You see "+[items.slice(0, -1).join(', '), items.slice(-1)[0]].join(items.length < 2 ? '' : ' and ')+" here.");
+    }
   }
 
   // add exits to relay

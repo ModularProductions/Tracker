@@ -1,20 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Auth from '../utils/Auth';
 import API from '../utils/API';
-import { Card, CardText } from 'material-ui/Card';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
 
 class Login extends React.Component {
   // set the initial component state
   state = {
+    authenticated: this.props.authenticated,
     toggleForms: false,
     errors: {},
     successMessage: "",
     user: {
-      email: "",
       name: "",
+      email: "",
       password: ""
     },
     secretData: ""
@@ -37,16 +34,23 @@ class Login extends React.Component {
       localStorage.removeItem('successMessage');
     }
     this.setState({ successMessage });
-    console.log("LoginPage, this.state =", this.state);
   }
   
   componentWillUnmount(){
+    this.toggleAuthenticateStatus;
     this.setState({
       errors: {}
     });
   }
 
+  refreshUserScreen = () => {
+    this.props.toggleAuthenticateStatus();
+    this.forceUpdate();
+  }
+
   toggleForms = () => {
+
+    // this.forceUpdate();
     this.setState({ toggleForms: !this.state.toggleForms })
   }
 
@@ -65,61 +69,61 @@ class Login extends React.Component {
     });
   }
 
-  Dashboard = ({ secretData, user }) => (
-    <div className="container">
-      <div className="title"
-        title="Dashboard"
-        subtitle="You should get access to this page only after authentication."
-      />
-      {secretData && <p style={{ fontSize: '16px', color: 'green' }}>Welcome <strong>{user.name}</strong>!<br />{secretData}</p>}
-    </div>
-  );
+  Dashboard({ secretData, user }) {
+    return (
+      <div className="container">
+        <div className="title"
+          title="Dashboard"
+          subtitle="You should get access to this page only after authentication."
+          />
+        <p>Saved games here.</p>
+        {secretData && <p style={{ fontSize: '16px', color: 'green' }}>Welcome <strong>{user.name}</strong>!<br />{secretData}</p>}
+        <button onClick={this.logOutUser}>Log out</button>
+      </div>
+    )
+  };
 
   SignUpForm() {
     return (
-      <Card className="container">
+      <div className="container">
         <form action="/" onSubmit={this.processSignupForm}>
           <h2 className="card-heading">Sign Up</h2>
           {this.state.errors.summary && <p className="error-message">{this.state.errors.summary}</p>}
     
           <div className="field-line">
-            <TextField
-              floatingLabelText="Name"
+          <label>name:</label>
+            <input
               name="name"
-              errorText={this.state.errors.name}
               onChange={this.changeUser}
               value={this.state.user.name}
             />
           </div>
     
           <div className="field-line">
-            <TextField
-              floatingLabelText="Email"
+          <label>email: </label>
+            <input
               name="email"
-              errorText={this.state.errors.email}
               onChange={this.changeUser}
               value={this.state.user.email}
             />
           </div>
     
           <div className="field-line">
-            <TextField
-              floatingLabelText="Password"
+          <label>password:</label>
+            <input
               type="password"
               name="password"
               onChange={this.changeUser}
-              errorText={this.state.errors.password}
               value={this.state.user.password}
             />
           </div>
     
           <div className="button-line">
-            <RaisedButton type="submit" label="Create New Account" primary />
-            <CardText>Already have an account? <RaisedButton onClick={this.toggleForms}>Sign in</RaisedButton>.</CardText>
-
+            <button type="submit">Create New Account</button>
           </div>
+          <p className="footnote">Already have an account? <button onClick={this.toggleForms}>Sign in</button></p>
         </form>
-      </Card>
+      </div>
     )
   };
   /**
@@ -136,15 +140,15 @@ class Login extends React.Component {
 
     //const formData = `email=${email}&password=${password}`;
     API.signUp({name, email, password}).then(res => {
+      console.log("test:", res);
+
       // change the component-container state
       // set a message
       localStorage.setItem('successMessage', res.data.message);
 
       // redirect user after sign up to login page
-      this.props.history.push('/login');
-      this.setState({
-        errors: {}
-      });
+
+      this.refreshUserScreen();
     }).catch(( {response} ) => {
       const errors = response.data.errors ? response.data.errors : {};
       errors.summary = response.data.message;
@@ -154,9 +158,9 @@ class Login extends React.Component {
     });
   }
   
-  LoginForm() {
+  LoginForm = () => {
     return (
-      <Card className="container">
+      <div className="container">
         <form action="/" onSubmit={this.processLoginForm}>
           <h2 className="card-heading">Login</h2>
   
@@ -164,33 +168,31 @@ class Login extends React.Component {
           {this.state.errors.summary && <p className="error-message">{this.state.errors.summary}</p>}
   
           <div className="field-line">
-            <TextField
-              floatingLabelText="Email"
+            <label>email:</label>
+            <input
               name="email"
-              errorText={this.state.errors.email}
               onChange={this.changeUser}
               value={this.state.user.email}
-            />
+              />
           </div>
   
           <div className="field-line">
-            <TextField
-              floatingLabelText="Password"
+              <label>password:</label>
+            <input
               type="password"
               name="password"
               onChange={this.changeUser}
-              errorText={this.state.errors.password}
               value={this.state.user.password}
             />
           </div>
   
           <div className="button-line">
-            <RaisedButton type="submit" label="Log in" primary />
+            <button type="submit">Log In</button>
           </div>
   
-          <CardText>Don't have an account? <RaisedButton onClick={this.toggleForms}>Create one</RaisedButton>.</CardText>
+          <p className="footnote">Don't have an account? <button onClick={this.toggleForms}>Create one</button></p>
         </form>
-      </Card>
+      </div>
     )
   }
  
@@ -200,34 +202,28 @@ class Login extends React.Component {
 
     // create a string for an HTTP body message
     const { email, password } = this.state.user;
-
     API.login({email, password}).then(res => {
         // save the token
         Auth.authenticateUser(res.data.token);
 
         // update authenticated state
-        this.props.toggleAuthenticateStatus()
         
         // refreshes UserPage on successful signin
-        this.props.refreshUserScreen();
+        this.refreshUserScreen();
         
-    }).catch(( {response} ) => {
+    }).catch(error => {
+      console.log("error", error);
+      const {response} = error;
+      const errors = response.data.errors ? response.data.errors : {};
+      errors.summary = response.data.message;
 
-        const errors = response.data.errors ? response.data.errors : {};
-        errors.summary = response.data.message;
-
-        this.setState({
-          errors
-        });
+      this.setState({
+        errors
       });
+    });
     
   }
 
-  /**
-   * Change the user object.
-   *
-   * @param {object} event - the JavaScript event object
-   */
   changeUser = event => {
     const field = event.target.name;
     const user = this.state.user;
@@ -240,7 +236,8 @@ class Login extends React.Component {
 
   logOutUser = () => {
     Auth.deauthenticateUser();
-    this.props.refreshUserScreen;
+    this.toggleAuthenticateStatus;
+    // this.props.refreshUserScreen;
   }
 
   /**
@@ -249,19 +246,14 @@ class Login extends React.Component {
   render() {
     return (
       <div>
-        {this.props.authenticated ? (
-          <div className="top-bar-right">
+        {this.state.authenticated ? (
+          <div className="user-form">
             <div className="container">
-              <div
-                title="Dashboard"
-                subtitle="You should get access to this page only after authentication."
-              />
-              {this.state.secretData && <p style={{ fontSize: '16px', color: 'green' }}>Welcome <strong>{this.state.user.name}</strong>!<br />{this.state.secretData}</p>}
+              {this.Dashboard(this.state.secretData, this.state.user.name)}
             </div>
-            <button onClick={this.logOutUser}>Log out</button>
           </div>
         ) : (
-          <div className="top-bar-right">
+          <div className="user-form">
             {this.state.toggleForms ? (
               <div>
                 {this.LoginForm()}
@@ -273,7 +265,6 @@ class Login extends React.Component {
             )}
           </div>
         )}
-        <button className="gameButton smButton" onClick={this.props.viewUserScreenToggle}>Return to Game</button>
       </div>
     )
   }
