@@ -1,5 +1,6 @@
-import React from 'react';
-import API from '../utils/API';
+import React from "react";
+import API from "../utils/API";
+import Auth from "../utils/Auth";
 
 class SignUpForm extends React.Component {
   // set the initial component state
@@ -29,24 +30,25 @@ class SignUpForm extends React.Component {
   processSignupForm = event => {
     // prevent default action. in this case, action is the form submission event
     event.preventDefault();
-    
     // create a string for an HTTP body message
     const { name, email, password } = this.state.user;
-
+    console.log("test res:", this.state.user);
+    
     //const formData = `email=${email}&password=${password}`;
     API.signUp({name, email, password}).then(res => {
-      console.log("test:", res);
-
+      
       // change the component-container state
       // set a message
       localStorage.setItem('successMessage', res.data.message);
-
       this.setState({
         errors: {}
       });
-      this.props.refreshUserScreen;
+      console.log("signup successful, localStorage =", localStorage);
+      console.log("in processSignupForm(), Auth.isUserAuthenticated() =", Auth.isUserAuthenticated());
+      this.props.refreshUserScreen();
 
     }).catch(( {response} ) => {
+      console.log("in API.signUp().catch(), response.data =", response.data);
       const errors = response.data.errors ? response.data.errors : {};
       errors.summary = response.data.message;
       this.setState({

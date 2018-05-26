@@ -75,6 +75,6 @@ export default function loadGame(prevState, props) {
   let initialData = { relay: relay, state: thisState.game, takesTime: false };
   let firstRoom = describeRoom(initialData, creaturesHere(thisState.game.allCreatures, thisState.game.playerLocation));
   relay.concat(firstRoom.relay);
-  console.log("loadGame() thisState =", thisState);
+  // console.log("loadGame() thisState =", thisState);
   return thisState;
 };

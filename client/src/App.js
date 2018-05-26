@@ -20,8 +20,9 @@ import Login from "./components/Login";
 import ButtonAreaOne from "./components/ButtonAreaOne"
 import ButtonAreaTwo from "./components/ButtonAreaTwo"
 import Sidebar from "./components/Sidebar"
-import SavedGames from "./components/SavedGames"
+// import SavedGames from "./components/SavedGames"
 import "./App.css";
+import API from './utils/API';
 
 // checks if being viewed in mobile layout
 let isMobile = window.innerWidth < 768 ? true : false
@@ -39,7 +40,7 @@ class App extends Component {
     viewCharacter: false,
     viewAbout: false,
     viewHelp: false,
-    viewUserScreen: false,
+    viewUserScreen: true,
     showLoginPage: true,
     isMobile: isMobile,
     userCommand: "",
@@ -66,18 +67,21 @@ class App extends Component {
       options: {
         verbose: true,
       }
-    }
+    },
+    secretData: '',
+    user: {}
   }
 
   handleUserCommand = this.handleUserCommand;  
 
   componentDidMount() {
     // check if user is logged in on refresh
+    console.log("on load, user authenticated? ", Auth.isUserAuthenticated());
     this.toggleAuthenticateStatus()
 
     // loads game data on first render, skips when components re-render
     if (this.state.loadingFreshGame) {
-      console.log("loading fresh game");
+      // console.log("loading fresh game");
       // upon mounting of game component, populate rooms, creatures, and player with items
       this.setState((prevState, props) => loadGame(prevState, props));
       this.setState({ loadingFreshGame: false });
@@ -89,6 +93,15 @@ class App extends Component {
     console.log("@GamePage unmount, userAuthenticated =", this.state.authenticated);
   }
 
+  getSecretData = () => {
+    API.dashboard(Auth.getToken())
+      .then(res => {
+        this.setState({
+            secretData: res.data.message,
+            user: res.data.user,
+          });
+      })
+  }
   // logOutUser = () => {
   //   Auth.deauthenticateUser();
   //   this.toggleAuthenticateStatus();
@@ -96,12 +109,52 @@ class App extends Component {
   //   console.log("auth =", this.state.authenticated);
   // }
 
+  changeUser = event => {
+    const field = event.target.name;
+    const user = this.state.user;
+    user[field] = event.target.value;
+
+    this.setState({
+      user
+    });
+  }
+
+  processLoginForm = event => {
+    // prevent default action. in this case, action is the form submission event
+    event.preventDefault();
+
+    // create a string for an HTTP body message
+    const { email, password } = this.state.user;
+
+    API.login({email, password}).then(res => {
+        // save the token
+        Auth.authenticateUser(res.data.token);
+        console.log("successful login, localStorage =", localStorage);
+        // update authenticated state
+        this.toggleAuthenticateStatus();
+        // refreshes UserPage on successful signin
+        
+    }).catch(error => {
+      console.log("error", error);
+      const {response} = error;
+      const errors = response.data.errors ? response.data.errors : {};
+      errors.summary = response.data.message;
+
+      this.setState({
+        errors
+      });
+    });
+    
+  }
+  
   logOutUser = () => {
     console.log("logOutUser button clicked");
     Auth.deauthenticateUser();
+    this.setState({ authenticated: false }, () => {console.log("App.js state =", this.state);});
     // this.setState({ secretData: '',
     // user: {}, showForm: "login" });
-    this.forceUpdate;
+  
+    // this.forceUpdate();
   };
 
   // *
@@ -195,7 +248,12 @@ class App extends Component {
 
   toggleAuthenticateStatus = () => {
     // check authenticated status and toggle state based on that
+    console.log("in App.js (before toggle): authenticated =", this.state.authenticated);
     this.setState({ authenticated: Auth.isUserAuthenticated() })
+    this.getSecretData();
+    console.log("in App.js (after toggle): authenticated =", this.state.authenticated);
+    console.log("in App.js state =", this.state);
+    // this.forceUpdate();
   }
 
   render() {
@@ -208,8 +266,11 @@ class App extends Component {
               viewUserScreenToggle={this.viewUserScreenToggle}
               toggleAuthenticateStatus={this.toggleAuthenticateStatus} 
               handleNewGameButton={this.handleNewGameButton} 
-              viewUserScreenToggle={this.viewUserScreenToggle}
               logOutUser={this.logOutUser}
+              user={this.state.user}
+              secretData={this.state.secretData}
+              changeUser={this.changeUser}
+              processLoginForm={this.processLoginForm}
             />
           </div>
         ) : (

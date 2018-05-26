@@ -24,56 +24,55 @@ class LogInForm extends React.Component {
     this.setState({ successMessage });
   }
 
-  componentWillUnmount() {
-    this.toggleAuthenticateStatus;
-    this.setState({
-      errors: {}
-    });
-  }
+  // componentWillUnmount() {
+  //   this.toggleAuthenticateStatus();
+  //   this.setState({
+  //     errors: {}
+  //   });
+  // }
   
-  processLoginForm = event => {
-    // prevent default action. in this case, action is the form submission event
-    event.preventDefault();
+  // processLoginForm = event => {
+  //   // prevent default action. in this case, action is the form submission event
+  //   event.preventDefault();
 
-    // create a string for an HTTP body message
-    const { email, password } = this.state.user;
+  //   // create a string for an HTTP body message
+  //   const { email, password } = this.state.user;
 
-    API.login({email, password}).then(res => {
-        // save the token
-        Auth.authenticateUser(res.data.token);
-        console.log("ping");
-        // update authenticated state
-        this.props.toggleAuthenticateStatus;
-        // refreshes UserPage on successful signin
-        this.props.refreshUserScreen;
+  //   API.login({email, password}).then(res => {
+  //       // save the token
+  //       Auth.authenticateUser(res.data.token);
+  //       console.log("successful login, localStorage =", localStorage);
+  //       // update authenticated state
+  //       this.props.toggleAuthenticateStatus();
+  //       // refreshes UserPage on successful signin
         
-    }).catch(error => {
-      console.log("error", error);
-      const {response} = error;
-      const errors = response.data.errors ? response.data.errors : {};
-      errors.summary = response.data.message;
+  //   }).catch(error => {
+  //     console.log("error", error);
+  //     const {response} = error;
+  //     const errors = response.data.errors ? response.data.errors : {};
+  //     errors.summary = response.data.message;
 
-      this.setState({
-        errors
-      });
-    });
+  //     this.setState({
+  //       errors
+  //     });
+  //   });
     
-  }
+  // }
 
-  changeUser = event => {
-    const field = event.target.name;
-    const user = this.state.user;
-    user[field] = event.target.value;
+  // changeUser = event => {
+  //   const field = event.target.name;
+  //   const user = this.state.user;
+  //   user[field] = event.target.value;
 
-    this.setState({
-      user
-    });
-  }
+  //   this.setState({
+  //     user
+  //   });
+  // }
 
   render() {
     return (
       <div className="container">
-        <form action="/" onSubmit={this.processLoginForm}>
+        <form action="/" onSubmit={this.props.processLoginForm}>
           <h2 className="card-heading">Login</h2>
 
           {this.state.successMessage && <p className="success-message">{this.state.successMessage}</p>}
@@ -83,8 +82,8 @@ class LogInForm extends React.Component {
             <label>email:</label>
             <input
               name="email"
-              onChange={this.changeUser}
-              value={this.state.user.email}
+              onChange={this.props.changeUser}
+              value={this.props.user.email}
               />
           </div>
 
@@ -93,8 +92,8 @@ class LogInForm extends React.Component {
             <input
               type="password"
               name="password"
-              onChange={this.changeUser}
-              value={this.state.user.password}
+              onChange={this.props.changeUser}
+              value={this.props.user.password}
             />
           </div>
 

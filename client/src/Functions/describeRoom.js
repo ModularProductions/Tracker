@@ -18,7 +18,7 @@ export default function describeRoom(currData, creaturesPresent) {
   }
   // add creatures present to relay
   if (creaturesPresent.length) {
-    console.log("one or more creatures present");
+    // console.log("one or more creatures present");
     if (canSee) {
       creaturesPresent.forEach(ele => {
         if (currData.state.allCreatures[ele].location === currData.state.playerLocation) {
