@@ -23,56 +23,38 @@ class LogInForm extends React.Component {
     }
     this.setState({ successMessage });
   }
-
-  // componentWillUnmount() {
-  //   this.toggleAuthenticateStatus();
-  //   this.setState({
-  //     errors: {}
-  //   });
-  // }
   
-  // processLoginForm = event => {
-  //   // prevent default action. in this case, action is the form submission event
-  //   event.preventDefault();
+  processLoginForm = event => {
+    // prevent default action. in this case, action is the form submission event
+    event.preventDefault();
 
-  //   // create a string for an HTTP body message
-  //   const { email, password } = this.state.user;
+    // create a string for an HTTP body message
+    const { email, password } = this.props.user;
 
-  //   API.login({email, password}).then(res => {
-  //       // save the token
-  //       Auth.authenticateUser(res.data.token);
-  //       console.log("successful login, localStorage =", localStorage);
-  //       // update authenticated state
-  //       this.props.toggleAuthenticateStatus();
-  //       // refreshes UserPage on successful signin
+    API.login({email, password}).then(res => {
+        // save the token
+        Auth.authenticateUser(res.data.token);
+        console.log("successful login, localStorage =", localStorage);
+        // update authenticated state
+        this.props.toggleAuthenticateStatus();
+        // refreshes UserPage on successful signin
         
-  //   }).catch(error => {
-  //     console.log("error", error);
-  //     const {response} = error;
-  //     const errors = response.data.errors ? response.data.errors : {};
-  //     errors.summary = response.data.message;
+    }).catch(error => {
+      console.log("error", error);
+      const {response} = error;
+      const errors = response.data.errors ? response.data.errors : {};
+      errors.summary = response.data.message;
 
-  //     this.setState({
-  //       errors
-  //     });
-  //   });
-    
-  // }
-
-  // changeUser = event => {
-  //   const field = event.target.name;
-  //   const user = this.state.user;
-  //   user[field] = event.target.value;
-
-  //   this.setState({
-  //     user
-  //   });
-  // }
+      this.setState({
+        errors
+      });
+    }); 
+  }
 
   render() {
     return (
       <div className="container">
-        <form action="/" onSubmit={this.props.processLoginForm}>
+        <form action="/" onSubmit={this.processLoginForm}>
           <h2 className="card-heading">Login</h2>
 
           {this.state.successMessage && <p className="success-message">{this.state.successMessage}</p>}

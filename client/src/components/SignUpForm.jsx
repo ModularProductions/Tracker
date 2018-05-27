@@ -39,13 +39,16 @@ class SignUpForm extends React.Component {
       
       // change the component-container state
       // set a message
+      console.log("API.signUp res =", res);
       localStorage.setItem('successMessage', res.data.message);
       this.setState({
         errors: {}
       });
       console.log("signup successful, localStorage =", localStorage);
       console.log("in processSignupForm(), Auth.isUserAuthenticated() =", Auth.isUserAuthenticated());
-      this.props.refreshUserScreen();
+      // this.props.refreshUserScreen();
+      Auth.authenticateUser(res.data.token);
+      this.props.toggleAuthenticateStatus();
 
     }).catch(( {response} ) => {
       console.log("in API.signUp().catch(), response.data =", response.data);

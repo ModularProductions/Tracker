@@ -5,36 +5,9 @@ import SignUpForm from "./SignUpForm";
 import LogInForm from "./LogInForm";
 
 class Login extends React.Component {
-  // set the initial component state
   state = {
-    authenticated: this.props.authenticated,
     toggleForms: false,
-    secretData: '',
-    user: {}
   }
-  
-  // componentDidMount() {
-  //   if (Auth.isUserAuthenticated()) {
-  //     console.log("in Login.jsx cWM, Auth.isUserAuthenticated = true");
-  //     this.props.toggleAuthenticateStatus();
-  //     this.setState({ authenticated: true });
-  //     this.getSecretData();
-  //   }
-  // }
-
-  // componentDidUpdate() {
-  //   console.log("Login.jsx componentDidUpdate firing");
-  //   console.log("Login.jsx state =", this.state);
-  // }
-  // componentDidMount() {
-  //   API.dashboard(Auth.getToken())
-  //   .then(res => {
-  //     this.setState({
-  //         secretData: res.data.message,
-  //         user: res.data.user
-  //       });
-  //   })
-  // }
 
   refreshUserScreen = () => {
     console.log("in Login.jsx refreshUserScreen(), authenticated =", this.state.authenticated);
@@ -44,30 +17,6 @@ class Login extends React.Component {
   toggleForms = () => {
     this.setState({ toggleForms: !this.state.toggleForms })
   }
-
-  // getSecretData = () => {
-  //   API.dashboard(Auth.getToken())
-  //     .then(res => {
-  //       this.setState({
-  //           secretData: res.data.message,
-  //           user: res.data.user,
-  //         });
-  //     })
-  // }
-  /**
-   * Change the user object.
-   *
-   * @param {object} event - the JavaScript event object
-   */
-  // changeUser = event => {
-  //   const field = event.target.name;
-  //   const user = this.state.user;
-  //   user[field] = event.target.value;
-
-  //   this.setState({
-  //     user
-  //   });
-  // }
 
   Dashboard({ secretData, user }) {
     return (
@@ -80,19 +29,6 @@ class Login extends React.Component {
     )
   };
 
-  // authenticationStatusChange = () => {
-  //   this.setState({ authenticated: Auth.isUserAuthenticated()})
-  // }
-  // toggleAuthenticateStatus = () => {
-  //   console.log("Login.jsx toggleAuthenticateStatus firing");
-  //   this.setState({ authenticated: Auth.isUserAuthenticated() });
-  //   this.getSecretData();
-  //   this.props.toggleAuthenticateStatus()
-  // }
-
-  /**
-   * Render the component.
-   */
   render() {
     return (
       <div>
@@ -123,6 +59,7 @@ class Login extends React.Component {
                   toggleForms={this.toggleForms}
                   changeUser={this.props.changeUser}
                   processLoginForm={this.props.processLoginForm}
+                  user={this.props.user}
                 />
               </div>
             )}

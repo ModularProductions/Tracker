@@ -69,7 +69,7 @@ class App extends Component {
       }
     },
     secretData: '',
-    user: {}
+    user: {email: '', password: ''}
   }
 
   handleUserCommand = this.handleUserCommand;  
@@ -102,12 +102,6 @@ class App extends Component {
           });
       })
   }
-  // logOutUser = () => {
-  //   Auth.deauthenticateUser();
-  //   this.toggleAuthenticateStatus();
-  //   console.log("log out button fired");
-  //   console.log("auth =", this.state.authenticated);
-  // }
 
   changeUser = event => {
     const field = event.target.name;
@@ -118,43 +112,11 @@ class App extends Component {
       user
     });
   }
-
-  processLoginForm = event => {
-    // prevent default action. in this case, action is the form submission event
-    event.preventDefault();
-
-    // create a string for an HTTP body message
-    const { email, password } = this.state.user;
-
-    API.login({email, password}).then(res => {
-        // save the token
-        Auth.authenticateUser(res.data.token);
-        console.log("successful login, localStorage =", localStorage);
-        // update authenticated state
-        this.toggleAuthenticateStatus();
-        // refreshes UserPage on successful signin
-        
-    }).catch(error => {
-      console.log("error", error);
-      const {response} = error;
-      const errors = response.data.errors ? response.data.errors : {};
-      errors.summary = response.data.message;
-
-      this.setState({
-        errors
-      });
-    });
-    
-  }
   
   logOutUser = () => {
     console.log("logOutUser button clicked");
     Auth.deauthenticateUser();
-    this.setState({ authenticated: false }, () => {console.log("App.js state =", this.state);});
-    // this.setState({ secretData: '',
-    // user: {}, showForm: "login" });
-  
-    // this.forceUpdate();
+    this.setState({ authenticated: false }, () => {console.log("App.js state =", this.state)});
   };
 
   // *
