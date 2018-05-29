@@ -57,6 +57,7 @@ class Login extends React.Component {
                   toggleAuthenticateStatus={this.props.toggleAuthenticateStatus} 
                   refreshUserScreen={this.refreshUserScreen}
                   toggleForms={this.toggleForms}
+                  user={this.props.user}
                   changeUser={this.props.changeUser}
                   processLoginForm={this.props.processLoginForm}
                   user={this.props.user}

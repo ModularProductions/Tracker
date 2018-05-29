@@ -6,22 +6,22 @@ class SignUpForm extends React.Component {
   // set the initial component state
   state = {
     errors: {},
-    user: {
-      email: "",
-      name: "",
-      password: ""
-    }
+    // user: {
+    //   email: "",
+    //   name: "",
+    //   password: ""
+    // }
   }
 
-  componentWillUnmount() {
-    this.setState({     
-      user: {
-        email: "",
-        name: "",
-        password: ""
-      }
-    })
-  }
+  // componentWillUnmount() {
+  //   this.setState({     
+  //     user: {
+  //       email: "",
+  //       name: "",
+  //       password: ""
+  //     }
+  //   })
+  // }
   /**
   * Process the form.
   *
@@ -31,7 +31,7 @@ class SignUpForm extends React.Component {
     // prevent default action. in this case, action is the form submission event
     event.preventDefault();
     // create a string for an HTTP body message
-    const { name, email, password } = this.state.user;
+    const { name, email, password } = this.props.user;
     
     //const formData = `email=${email}&password=${password}`;
     API.signUp({name, email, password}).then(res => {
@@ -60,15 +60,15 @@ class SignUpForm extends React.Component {
    *
    * @param {object} event - the JavaScript event object
    */
-  changeUser = event => {
-    const field = event.target.name;
-    const user = this.state.user;
-    user[field] = event.target.value;
+  // changeUser = event => {
+  //   const field = event.target.name;
+  //   const user = this.state.user;
+  //   user[field] = event.target.value;
 
-    this.setState({
-      user
-    });
-  }
+  //   this.setState({
+  //     user
+  //   });
+  // }
 
   /**
    * Render the component.
@@ -84,8 +84,8 @@ class SignUpForm extends React.Component {
           <label>name:</label>
             <input
               name="name"
-              onChange={this.changeUser}
-              value={this.state.user.name}
+              onChange={this.props.changeUser}
+              value={this.props.user.name}
             />
           </div>
     
@@ -93,8 +93,8 @@ class SignUpForm extends React.Component {
           <label>email: </label>
             <input
               name="email"
-              onChange={this.changeUser}
-              value={this.state.user.email}
+              onChange={this.props.changeUser}
+              value={this.props.user.email}
             />
           </div>
     
@@ -103,8 +103,8 @@ class SignUpForm extends React.Component {
             <input
               type="password"
               name="password"
-              onChange={this.changeUser}
-              value={this.state.user.password}
+              onChange={this.props.changeUser}
+              value={this.props.user.password}
             />
           </div>
     

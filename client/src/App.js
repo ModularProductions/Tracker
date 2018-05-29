@@ -68,8 +68,12 @@ class App extends Component {
         verbose: true,
       }
     },
-    secretData: '',
-    user: {email: '', password: ''}
+    secretData: "",
+    user: {
+      name: "",
+      email: "",
+      password: ""
+    }
   }
 
   handleUserCommand = this.handleUserCommand;  
@@ -114,7 +118,7 @@ class App extends Component {
   
   logOutUser = () => {
     Auth.deauthenticateUser();
-    this.setState({ authenticated: false });
+    this.setState({ authenticated: false, user: { name: "", email: "", password: ""} });
   };
 
   // *
