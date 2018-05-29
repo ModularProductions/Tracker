@@ -7,10 +7,25 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 const config = require("./server/config");
 const logger = require("morgan");
+const mongoose = require('mongoose')
+
 
 // connect to the database and load models
 // uses environmental variable for deployment (Heroku) or defaults to local config
-require("./server/models").connect(process.env.MONGODB_URI || config.dbUri);
+
+const uri = process.env.MONGODB_URI || config.dbUri;
+
+mongoose.connect(uri);
+  
+//plug in the promise library:
+mongoose.Promise = global.Promise;
+
+mongoose.connection.on("error", (err) => {
+  console.error(`Mongoose connection error: ${err}`);
+  process.exit(1);
+});
+
+require("./server/models");
 
 // Use morgan logger for logging requests
 app.use(logger("dev"));

@@ -32,26 +32,21 @@ class SignUpForm extends React.Component {
     event.preventDefault();
     // create a string for an HTTP body message
     const { name, email, password } = this.state.user;
-    console.log("test res:", this.state.user);
     
     //const formData = `email=${email}&password=${password}`;
     API.signUp({name, email, password}).then(res => {
       
       // change the component-container state
       // set a message
-      console.log("API.signUp res =", res);
       localStorage.setItem('successMessage', res.data.message);
       this.setState({
         errors: {}
       });
-      console.log("signup successful, localStorage =", localStorage);
-      console.log("in processSignupForm(), Auth.isUserAuthenticated() =", Auth.isUserAuthenticated());
       // this.props.refreshUserScreen();
       Auth.authenticateUser(res.data.token);
-      this.props.toggleAuthenticateStatus();
+      this.props.toggleAuthenticateStatus(res.data.message);
 
     }).catch(( {response} ) => {
-      console.log("in API.signUp().catch(), response.data =", response.data);
       const errors = response.data.errors ? response.data.errors : {};
       errors.summary = response.data.message;
       this.setState({

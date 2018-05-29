@@ -32,12 +32,13 @@ class LogInForm extends React.Component {
     const { email, password } = this.props.user;
 
     API.login({email, password}).then(res => {
-        // save the token
-        Auth.authenticateUser(res.data.token);
-        console.log("successful login, localStorage =", localStorage);
-        // update authenticated state
-        this.props.toggleAuthenticateStatus();
-        // refreshes UserPage on successful signin
+      console.log("processLoginForm() res =", res);
+      // save the token
+      Auth.authenticateUser(res.data.token);
+      console.log("successful login, localStorage =", localStorage);
+      // update authenticated state
+      this.props.toggleAuthenticateStatus();
+      // refreshes UserPage on successful signin
         
     }).catch(error => {
       console.log("error", error);

@@ -76,8 +76,7 @@ class App extends Component {
 
   componentDidMount() {
     // check if user is logged in on refresh
-    console.log("on load, user authenticated? ", Auth.isUserAuthenticated());
-    this.toggleAuthenticateStatus()
+    this.toggleAuthenticateStatus();
 
     // loads game data on first render, skips when components re-render
     if (this.state.loadingFreshGame) {
@@ -90,12 +89,12 @@ class App extends Component {
   
   componentWillUnmount() {
     this.toggleAuthenticateStatus();
-    console.log("@GamePage unmount, userAuthenticated =", this.state.authenticated);
   }
 
   getSecretData = () => {
     API.dashboard(Auth.getToken())
       .then(res => {
+        console.log("getSecretData() res =", res);
         this.setState({
             secretData: res.data.message,
             user: res.data.user,
@@ -107,16 +106,15 @@ class App extends Component {
     const field = event.target.name;
     const user = this.state.user;
     user[field] = event.target.value;
-
+    console.log("changeUser() user =", user);
     this.setState({
       user
     });
   }
   
   logOutUser = () => {
-    console.log("logOutUser button clicked");
     Auth.deauthenticateUser();
-    this.setState({ authenticated: false }, () => {console.log("App.js state =", this.state)});
+    this.setState({ authenticated: false });
   };
 
   // *
@@ -196,12 +194,31 @@ class App extends Component {
   }
 
   handleNewGameButton = () => {
-    console.log("New Game button firing");
     this.setState((prevState, props) => loadGame(prevState, props), () => {
       this.setState({viewUserScreen: !this.state.viewUserScreen}, () => {
         if (!this.state.viewUserScreen) updateScroll();
       })
     })
+  }
+
+  handleSaveButton = () => {
+    const saveData = {
+      player_id: this.state.user.email,
+      gameData: this.state.game,
+      quickSave: false
+    };
+    console.log("in handleSaveButton, Auth.getToken() =", Auth.getToken());
+    API.saveGame(saveData, Auth.getToken()).then(res => {
+      console.log("save game successful");
+      // do stuff here
+    }).catch(( {response} ) => {
+      const errors = response.data.errors ? response.data.errors : {};
+      console.log("in handleSaveButton (saveGame) response =", response);
+      errors.summary = response.data.message;
+      this.setState({
+        errors
+      });
+    });
   }
 
   handleLoadGame = data => {
@@ -210,11 +227,8 @@ class App extends Component {
 
   toggleAuthenticateStatus = () => {
     // check authenticated status and toggle state based on that
-    console.log("in App.js (before toggle): authenticated =", this.state.authenticated);
     this.setState({ authenticated: Auth.isUserAuthenticated() })
     this.getSecretData();
-    console.log("in App.js (after toggle): authenticated =", this.state.authenticated);
-    console.log("in App.js state =", this.state);
     // this.forceUpdate();
   }
 

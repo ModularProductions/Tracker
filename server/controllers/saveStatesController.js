@@ -15,7 +15,8 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   create: function(req, res) {
-    console.log(req);
+    console.log("in saveStateController (create), req.body =", req.body);
+    console.log("***** db =", db);
     db.SaveState
     .create(req.body)
     .then(dbModel => res.json(dbModel))
@@ -23,7 +24,7 @@ module.exports = {
   },
   update: function(req, res) {
     db.SaveState
-    .findOneAndUpdate({ _id: req.params.id }, req.body)
+    .findOneAndUpdate({ _id: req.params.id }, req.body, { upsert: true, new: true })
     .then(dbModel => res.json(dbModel))
     .catch(err => res.status(422).json(err));
   },
@@ -33,5 +34,5 @@ module.exports = {
     .then(dbModel => dbModel.remove())
     .then(dbModel => res.json(dbModel))
     .catch(err => res.status(422).json(err));
-  }
+  },
 };
