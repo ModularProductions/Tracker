@@ -34,7 +34,7 @@ class App extends Component {
 
   state = {
     loadData: undefined,
-    loadingFreshGame: true,
+    willInitializeGameEnv: true,
     inProgress: true,
     authenticated: false,
     viewCharacter: false,
@@ -83,11 +83,33 @@ class App extends Component {
     this.toggleAuthenticateStatus();
 
     // loads game data on first render, skips when components re-render
-    if (this.state.loadingFreshGame) {
+    if (this.state.willInitializeGameEnv) {
       // console.log("loading fresh game");
       // upon mounting of game component, populate rooms, creatures, and player with items
-      this.setState((prevState, props) => loadNewGame(prevState, props));
-      this.setState({ loadingFreshGame: false });
+      this.loadInitialGameEnv();
+    }
+  }
+
+  loadInitialGameEnv() {
+    if (Auth.isUserAuthenticated()) {
+      API.dashboard(Auth.getToken())
+        .then(res => {
+          API.getQuickSave(res.data.user._id, Auth.getToken())
+            .then(res => {
+              if (res.data.length) {
+                console.log("res.data =", res.data);
+                this.setState({ 
+                  game: res.data[0].gameData,
+                  willInitializeGameEnv: false 
+                }, () => console.log("game loaded"));
+                return;
+              }
+              this.setState((prevState, props) => loadNewGame(prevState, props));
+              this.setState({ willInitializeGameEnv: false });
+            }
+          )
+        }
+      )
     }
   }
   
@@ -116,7 +138,7 @@ class App extends Component {
   
   logOutUser = () => {
     Auth.deauthenticateUser();
-    this.setState({ authenticated: false, user: { name: "", email: "", password: ""} });
+    this.setState({ authenticated: false, user: { name: "", email: "", password: ""} }, this.loadInitialGameEnv());
   };
 
   // *
