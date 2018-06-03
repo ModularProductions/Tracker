@@ -98,7 +98,6 @@ class App extends Component {
   getSecretData = () => {
     API.dashboard(Auth.getToken())
       .then(res => {
-        console.log("getSecretData() res =", res);
         this.setState({
             secretData: res.data.message,
             user: res.data.user,
@@ -110,7 +109,6 @@ class App extends Component {
     const field = event.target.name;
     const user = this.state.user;
     user[field] = event.target.value;
-    console.log("changeUser() user =", user);
     this.setState({
       user
     });
@@ -204,25 +202,28 @@ class App extends Component {
       })
     })
   }
-
+  
   handleSaveButton = () => {
-    const saveData = {
-      player_id: this.state.user.email,
-      gameData: this.state.game,
-      quickSave: false
-    };
-    console.log("in handleSaveButton, Auth.getToken() =", Auth.getToken());
-    API.saveGame(saveData, Auth.getToken()).then(res => {
-      console.log("save game successful");
-      // do stuff here
-    }).catch(( {response} ) => {
-      const errors = response.data.errors ? response.data.errors : {};
-      console.log("in handleSaveButton (saveGame) response =", response);
-      errors.summary = response.data.message;
-      this.setState({
-        errors
-      });
-    });
+    API.dashboard(Auth.getToken())
+      .then(res => {
+        const saveData = {
+          userID: res.data.user._id,
+          gameData: this.state.game,
+          quickSave: false
+        };
+        API.saveGame(saveData, Auth.getToken()).then(res => {
+          console.log("save game successful");
+          // do stuff here
+        }).catch(( {response} ) => {
+          const errors = response.data.errors ? response.data.errors : {};
+          console.log("in handleSaveButton (saveGame) response =", response);
+          errors.summary = response.data.message;
+          this.setState({
+            errors
+          });
+        });
+      }
+    )
   }
 
   handleLoadGame = data => {
@@ -251,6 +252,7 @@ class App extends Component {
               secretData={this.state.secretData}
               changeUser={this.changeUser}
               processLoginForm={this.processLoginForm}
+              handleLoadGame={this.handleLoadGame}
             />
           </div>
         ) : (

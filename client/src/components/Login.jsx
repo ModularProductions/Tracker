@@ -1,8 +1,7 @@
 import React from 'react';
-import Auth from '../utils/Auth';
-import API from '../utils/API';
 import SignUpForm from "./SignUpForm";
 import LogInForm from "./LogInForm";
+import SavedGames from "./SavedGames";
 
 class Login extends React.Component {
   state = {
@@ -18,12 +17,16 @@ class Login extends React.Component {
     this.setState({ toggleForms: !this.state.toggleForms })
   }
 
-  Dashboard({ secretData, user }) {
+  Dashboard() {
     return (
       <div className="dashboard">
         {/* <p>Saved games here.</p> */}
-    {this.props.secretData && <p>Your Uber has dropped you off, <strong>{this.props.user.name}</strong>.<br />{this.props.secretData}</p>}
-        <button><strong>First Game</strong> Moves: 11, Saved: 5/15/18 4:33pm.</button>
+        {this.props.secretData && <p>Your Uber has dropped you off, <strong>{this.props.user.name}</strong>.<br />{this.props.secretData}</p>}
+        <SavedGames
+          handleLoadGame={this.props.handleLoadGame}
+          userID={this.props.user.email}
+        />
+        {/* <button><strong>First Game</strong> Moves: 11, Saved: 5/15/18 4:33pm.</button> */}
         <button onClick={this.props.logOutUser}>Log out</button>
       </div>
     )
@@ -35,7 +38,7 @@ class Login extends React.Component {
         {this.props.authenticated ? (
           <div className="user-form">
             <div className="container">
-              {this.Dashboard(this.props.secretData, this.props.user.name)}
+              {this.Dashboard()}
             </div>
           </div>
         ) : (
@@ -57,7 +60,6 @@ class Login extends React.Component {
                   toggleAuthenticateStatus={this.props.toggleAuthenticateStatus} 
                   refreshUserScreen={this.refreshUserScreen}
                   toggleForms={this.toggleForms}
-                  user={this.props.user}
                   changeUser={this.props.changeUser}
                   processLoginForm={this.props.processLoginForm}
                   user={this.props.user}

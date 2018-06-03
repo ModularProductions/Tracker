@@ -77,7 +77,6 @@ function validateLoginForm(payload) {
 
 router.post('/signup', (req, res, next) => {
   const validationResult = validateSignupForm(req.body);
-  console.log(validationResult)
   if (!validationResult.success) {
     console.log('died1')
     return res.status(400).json({
@@ -107,7 +106,6 @@ router.post('/signup', (req, res, next) => {
         message: 'Could not process the form.'
       });
     }
-    console.log("in auth.js (signup), res =", res);
     return res.status(200).json({
       success: true,
       message: 'You have successfully signed up! Now you should be able to log in.',

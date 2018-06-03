@@ -54,6 +54,7 @@ Player may switch, at any time, to user authentication screen for access to Acco
 `passport-local` (user authentication)
 `jsonwebtoken` (user authentication)
 `bcryptjs` (user authentication)
+`react-moment` (presentation)
 
 ## Frontend Module dependencies
 `axios` (user authentication, save game state)

@@ -12,6 +12,10 @@ router.route("/saveStates/:id")
   .get(saveStatesController.findById)
   .put(saveStatesController.update)
   .delete(saveStatesController.remove);
+  
+// Matches with "/api/saveStates/saved/:id"
+router.route("/saveStates/saved/:userID")
+  .get(saveStatesController.getSavedGames)
 
 // user auth routes
 router.use("/dashboard", (req, res) => {
