@@ -4,7 +4,7 @@ import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import About from "./components/About.jsx";
 import Help from "./components/Help.jsx";
 import { Input } from "./components/Form";
-import loadGame from "./Functions/loadGame";
+import loadNewGame from "./Functions/loadNewGame";
 import updateState from "./Functions/updateState";
 import { updateScroll } from "./Functions/utils";
 import parseCommand from "./Functions/parseCommand";
@@ -45,7 +45,7 @@ class App extends Component {
     isMobile: isMobile,
     userCommand: "",
     lastCommand: "",
-    // below loaded in loadGame(), below exists so components render
+    // initialization so components render,
     game: {
       playerLocation: "two",
       playerInventory: [],
@@ -86,7 +86,7 @@ class App extends Component {
     if (this.state.loadingFreshGame) {
       // console.log("loading fresh game");
       // upon mounting of game component, populate rooms, creatures, and player with items
-      this.setState((prevState, props) => loadGame(prevState, props));
+      this.setState((prevState, props) => loadNewGame(prevState, props));
       this.setState({ loadingFreshGame: false });
     }
   }
@@ -165,7 +165,7 @@ class App extends Component {
       }
 
       // incorporate datastream into component state
-      await this.setState((prevState, props) => (updateState(prevState, props, currData)));
+      await this.setState((prevState, props) => (updateState(prevState, props, currData)), this.updateQuickSave());
 
       // assure roomDesc window is scrolled to bottom
       updateScroll();
@@ -196,7 +196,7 @@ class App extends Component {
   }
 
   handleNewGameButton = () => {
-    this.setState((prevState, props) => loadGame(prevState, props), () => {
+    this.setState((prevState, props) => loadNewGame(prevState, props), () => {
       this.setState({viewUserScreen: !this.state.viewUserScreen}, () => {
         if (!this.state.viewUserScreen) updateScroll();
       })
@@ -206,12 +206,12 @@ class App extends Component {
   handleSaveButton = () => {
     API.dashboard(Auth.getToken())
       .then(res => {
-        const saveData = {
+        const fullData = {
           userID: res.data.user._id,
           gameData: this.state.game,
           quickSave: false
         };
-        API.saveGame(saveData, Auth.getToken()).then(res => {
+        API.saveGame(fullData, Auth.getToken()).then(res => {
           console.log("save game successful");
           // do stuff here
         }).catch(( {response} ) => {
@@ -222,6 +222,48 @@ class App extends Component {
             errors
           });
         });
+      }
+    )
+  }
+
+  updateQuickSave = () => {
+    API.dashboard(Auth.getToken())
+      .then(res => {
+        const fullData = {
+          userID: res.data.user._id,
+          gameData: this.state.game,
+          quickSave: true
+        };
+        API.getQuickSave(res.data.user._id, Auth.getToken())
+          .then(res => {
+            if (res.data.length) {
+              API.updateQuickSave(res.data[0]._id, { gameData: this.state.game }, Auth.getToken())
+              .then(res => {
+                console.log("quick save update successful");
+                // do stuff here
+              }).catch(( {response} ) => {
+                const errors = response.data.errors ? response.data.errors : {};
+                console.log("in updateQuickSave (updateQuickSave) response =", response);
+                errors.summary = response.data.message;
+                this.setState({
+                  errors
+                });
+              });
+            } else {
+              API.saveGame(fullData, Auth.getToken()).then(res => {
+                console.log("initial quick save successful");
+                // do stuff here
+              }).catch(( {response} ) => {
+                const errors = response.data.errors ? response.data.errors : {};
+                console.log("in handleSaveButton (saveGame) response =", response);
+                errors.summary = response.data.message;
+                this.setState({
+                  errors
+                });
+              });
+            }
+          }
+        )
       }
     )
   }

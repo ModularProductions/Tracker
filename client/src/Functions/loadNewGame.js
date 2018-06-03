@@ -1,7 +1,7 @@
 import describeRoom from "./describeRoom";
 import { creaturesHere } from "./utils";
 
-export default function loadGame(prevState, props) {
+export default function loadNewGame(prevState, props) {
   let room = require("../Objects/RoomBuilder");
   let Items = require("../Objects/ItemBuilder");
   let allCreatures = require("../Objects/CreatureBuilder");
@@ -75,6 +75,6 @@ export default function loadGame(prevState, props) {
   let initialData = { relay: relay, state: thisState.game, takesTime: false };
   let firstRoom = describeRoom(initialData, creaturesHere(thisState.game.allCreatures, thisState.game.playerLocation));
   relay.concat(firstRoom.relay);
-  // console.log("loadGame() thisState =", thisState);
+  // console.log("loadNewGame() thisState =", thisState);
   return thisState;
 };

@@ -21,6 +21,8 @@ module.exports = {
       .catch(err => res.status(422).json(err));
     },
     update: function(req, res) {
+      console.log("update req.params =", req.params);
+      console.log("update req.body =", req.body);
       db.SaveState
       .findOneAndUpdate({ _id: req.params.id }, req.body, { upsert: true, new: true })
       .then(dbModel => res.json(dbModel))
@@ -33,17 +35,23 @@ module.exports = {
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
     },
-    getQuickSave: function(req, res) {
-      db.SaveState
-      .find({ userID: req.params.userID, quickSave: true })
-      .then(dbModel => res.json(dbModel))
-      .catch(err => res.json(422).json(err));
-    },
     getSavedGames: function(req, res) {
       db.SaveState
       .find({ userID: req.params.userID })
       .sort({ date: -1 })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
-  }
+    },
+    getQuickSave: function(req, res) {
+      console.log("getQuickSave req.params =", req.params);
+      db.SaveState
+      .find({ userID: req.params.userID, quickSave: true })
+      .then(dbModel => 
+        {
+          console.log("getQuickSave dbModel =", dbModel);
+          res.json(dbModel)
+        }
+      )
+      .catch(err => res.status(422).json(err));
+    }
 };

@@ -17,6 +17,10 @@ router.route("/saveStates/:id")
 router.route("/saveStates/saved/:userID")
   .get(saveStatesController.getSavedGames)
 
+// Matches with "/api/saveStates/quicksave/:id"
+router.route("/saveStates/quicksave/:userID")
+  .get(saveStatesController.getQuickSave)
+
 // user auth routes
 router.use("/dashboard", (req, res) => {
   res.status(200).json({
