@@ -37,7 +37,7 @@ module.exports = {
     },
     getSavedGames: function(req, res) {
       db.SaveState
-      .find({ userID: req.params.userID })
+      .find({ userID: req.params.userID, quickSave: false })
       .sort({ date: -1 })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));

@@ -8,6 +8,10 @@ class Login extends React.Component {
     toggleForms: false,
   }
 
+  componentDidMount() {
+    console.log("Login.jsx did mount");
+  }
+
   refreshUserScreen = () => {
     console.log("in Login.jsx refreshUserScreen(), authenticated =", this.state.authenticated);
     this.forceUpdate();

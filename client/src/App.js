@@ -78,11 +78,13 @@ class App extends Component {
 
   handleUserCommand = this.handleUserCommand;  
 
-  componentDidMount() {
+  componentWillMount() {
+    console.log("App.js will mount");
     // check if user is logged in on refresh
     this.toggleAuthenticateStatus();
 
     // loads game data on first render, skips when components re-render
+
     if (this.state.willInitializeGameEnv) {
       // console.log("loading fresh game");
       // upon mounting of game component, populate rooms, creatures, and player with items
