@@ -262,6 +262,53 @@ h5, h6, h7, h8 {
        column-width: 300px;
 }
 
+/* Saved Games */
+
+.savedGames {
+  border: 1px dotted red;
+}
+
+.savedGames ul {
+  padding: 0;
+  border: 1px dotted green;
+  list-style: none;
+  margin: 0;
+}
+
+.savedGames li::before {
+  content: "\200B";
+}
+
+.savedGames li {
+  width: 100%;
+  position: relative;
+  margin-bottom: 1vmax;
+  border: 1px dotted yellow;
+  clear: both;
+}
+
+.savedGames div {
+  display: inline-block;
+  border: 1px solid rgb(150, 227, 250);
+  margin: 0 .5rem;
+  height: 100%;
+}
+
+.savedGameName {
+  float: left;
+  /* position: absolute;
+  left: 0; */
+}
+
+.savedGameTime {
+  color: red;
+}
+.deleteSaved {
+  float: right;
+  /* position: absolute;
+  right: 0; */
+}
+
 /* Tablet Portrait */
 @media screen and (min-width: 768px) {
   
