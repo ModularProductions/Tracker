@@ -6,7 +6,7 @@ import Help from "./components/Help.jsx";
 import { Input } from "./components/Form";
 import loadNewGame from "./Functions/loadNewGame";
 import updateState from "./Functions/updateState";
-import { updateScroll } from "./Functions/utils";
+import { updateScroll, showLocs } from "./Functions/utils";
 import parseCommand from "./Functions/parseCommand";
 import creaturesMove from "./Functions/creaturesMove";
 import { Col, Row, Container } from "reactstrap";
@@ -173,19 +173,19 @@ class App extends Component {
         modifiers: this.state.game.modifiers,
         options: this.state.game.modifiers
       }, takesTime: false };
-      console.log("*** command entered:", this.state.userCommand, "***");
+      // console.log("at entry of '"+this.state.userCommand+"' command, currData.state =", currData.state);
 
       // add user command to relay
       currData.relay.push("> "+this.state.userCommand);
 
       // start command processing here      
       currData = parseCommand(this.state.userCommand, currData);
-      // console.log("currData returned from parseCommand() =", currData);
 
       // advance game time, resolve entity action
       if (currData.takesTime) {
         currData = creaturesMove(currData);
         currData.state.moveCount++; 
+
       }
 
       // incorporate datastream into component state

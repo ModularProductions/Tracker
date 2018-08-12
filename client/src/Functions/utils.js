@@ -64,3 +64,9 @@ export function creaturesHere(allCreatures, playerLocation) {
   }
   return creaturesPresent;
 }
+
+// shows location of player, minotaur, and cat in currData
+// debugLocation is string
+export function showLocs(debugLocation, allCreatures, playerLocation) {
+  console.log(debugLocation+" locs = Player("+playerLocation+") Minotaur("+allCreatures.minotaur.location+") Cat("+allCreatures.cat.location+")");
+}
