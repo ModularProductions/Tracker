@@ -24,6 +24,7 @@ export default function creaturesMove(currData) {
           } else {
             for (let i = 0 ; i < exits.length; i++) {
               if (roll <= 50 + (i+1) * (50 / exits.length)) {
+                // console.log("in creaturesMove(), before move() currData.state =", currData.state);
                 currData = move(thisCreature, exits[i], currData.state.allCreatures[thisCreature].location, currData.state.room[currData.state.allCreatures[thisCreature].location].exits[exits[i]], currData);
                 // console.log(thisCreature+"'s location after move = '"+currData.state.allCreatures[thisCreature].location+"' ; roll = ", roll);
                 break;
