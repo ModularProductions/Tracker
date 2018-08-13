@@ -206,7 +206,7 @@ let eight = thisRoom;
 thisRoom = new Room(
   9,
   "Room Nine",
-  "There are a pile of dried leaves collected in the corner of this room. On the wall is a small framed painting of a white house."
+  "There is a pile of dried leaves collected in the corner of this room. On the wall is a small framed painting of a white house."
 );
 thisRoom.exits = {
   ...thisRoom.exits,
