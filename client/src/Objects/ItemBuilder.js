@@ -34,15 +34,15 @@ let bust = new Item(
 );
 bust.feature = true;
 
-let sword = new Item(
+let rustySword = new Item(
   "rusty sword",
-  "This once-noble weapon was clearly the armament of a mighty warrior, but has since been laid low by the elements. It still has some heft to it, though. (And, you notice, the words 'Made in Pakistan' stamped on the pommel.",
+  "This once-noble weapon was clearly the armament of a mighty warrior, but has since been laid low by the elements. It still has some heft to it, though. (And, you notice, the words 'Made in Pakistan' stamped on the pommel.)",
   ["sword", "rusty", "blade"],
   ["three"]
 );
-sword.invSize = 10;
-sword.wear = "wielded";
-sword.value = 10;
+rustySword.invSize = 10;
+rustySword.wear = "wielded";
+rustySword.value = 10;
 
 let glowingWall = new Item(
   "glowing wall",
@@ -139,7 +139,7 @@ module.exports = {
   cellPhone: cellPhone,
   brick: brick,
   bust: bust,
-  sword: sword,
+  rustySword: rustySword,
   glowingWall: glowingWall,
   tail: tail,
   horns: horns,

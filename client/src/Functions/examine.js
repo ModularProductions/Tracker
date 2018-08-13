@@ -16,7 +16,7 @@ export default function examine(words, currData) {
     return currData;
   }
   // check if player is a narcissist
-  if (words[1] === "me" || words[1] === "myself") {
+  if (words[1] === "me" || words[1] === "myself" || words[1] === "player") {
     // if (isMobile) this.viewCharacterToggle()} 
     currData.relay.push("You fine specimen, you.");
     console.log("Looking at self in dropItem(word). outgoing data =", currData);
@@ -39,22 +39,22 @@ export default function examine(words, currData) {
     }
   }
   // check present creatures if object not yet found
-  creaturesPresent.forEach(ele => {
-    if (currData.state.allCreatures[ele].keywords.includes(words[1])) {
-      currData.relay.push(currData.state.allCreatures[ele].lookDesc);
-      console.log("Found '"+words[1]+"' in creature array in examine(word). outgoing data =", currData);
+  for (let i = 0; i < creaturesPresent.length; i++) {
+    console.log("creature =", creaturesPresent[i]);
+    if (currData.state.allCreatures[creaturesPresent[i]].keywords.includes(words[1])) {
+      currData.relay.push(currData.state.allCreatures[creaturesPresent[i]].lookDesc);
+      return currData;
     } else {
       // check present creature features (in creature inventory) if object not yet found
-      for (let j = 0; j < currData.state.allCreatures[ele].inventory.length; j++) {
-        if (currData.state.allCreatures[ele].inventory[j].keywords.includes(words[1])) {
-          currData.relay.push(currData.state.allCreatures[ele].inventory[j].lookDesc);
+      for (let j = 0; j < currData.state.allCreatures[creaturesPresent[i]].inventory.length; j++) {
+        if (currData.state.allCreatures[creaturesPresent[i]].inventory[j].keywords.includes(words[1])) {
+          currData.relay.push(currData.state.allCreatures[creaturesPresent[i]].inventory[j].lookDesc);
           console.log("Found '"+words[1]+"' in creatureInv in examine(word). outgoing data =", currData);
           return currData;
         }
       }
     }
-    return currData;
-  })
+  }
   currData.relay.push("You don't see that here.");
   console.log("Tried to examine something and didn't find it, in examine(word). outgoing data =", currData);
   return currData;
