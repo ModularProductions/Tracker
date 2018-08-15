@@ -233,6 +233,7 @@ class App extends Component {
         const fullData = {
           userID: res.data.user._id,
           gameData: this.state.game,
+          currentPlayerLocation: this.state.game.room[this.state.game.playerLocation].name,
           quickSave: false
         };
         API.saveGame(fullData, Auth.getToken()).then(res => {
@@ -256,6 +257,7 @@ class App extends Component {
         const fullData = {
           userID: res.data.user._id,
           gameData: this.state.game,
+          currentPlayerLocation: this.state.game.room[this.state.game.playerLocation].name,
           quickSave: true
         };
         API.getQuickSave(res.data.user._id, Auth.getToken())
