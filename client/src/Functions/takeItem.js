@@ -87,16 +87,30 @@ export default function takeItem (words, currData) {
       return currData;
     }
   }
-  // "take" subject is not in room or player inv, checking creatures
-  creaturesPresent.forEach(ele => {
-    if (currData.state.allCreatures[ele].location === currData.state.playerLocation) {
-      if (currData.state.allCreatures[ele].keywords.includes(words[1])) {
-        currData.relay.push("I don't think they would like that.");
-        console.log("Tried to take a creature in takeItem(single). outgoing data =", currData);
-        return currData;
+  // "take" subject is not in room or player inv, checking creatures and their inventories
+  for (let i = 0; i < creaturesPresent.length; i++) {
+    if (currData.state.allCreatures[creaturesPresent[i]].keywords.includes(words[1])) {
+      currData.relay.push("I don't think they would like that.");
+      console.log("Tried to take a creature in takeItem(single). outgoing data =", currData);
+      return currData;
+    } else {
+      for (let j = 0; j < currData.state.allCreatures[creaturesPresent[i]].inventory.length; j++) {
+        if (currData.state.allCreatures[creaturesPresent[i]].inventory[j].keywords.includes(words[1])) {
+          currData.relay.push("The "+currData.state.allCreatures[creaturesPresent[i]].shortName+" won't let you.")
+          return currData;
+        }
       }
     }
-  })
+  }
+  // creaturesPresent.forEach(ele => {
+  //   if (currData.state.allCreatures[ele].location === currData.state.playerLocation) {
+  //     if (currData.state.allCreatures[ele].keywords.includes(words[1])) {
+  //       currData.relay.push("I don't think they would like that.");
+  //       console.log("Tried to take a creature in takeItem(single). outgoing data =", currData);
+  //       return currData;
+  //     }
+  //   }
+  // })
   // can't find "take" subject
   console.log("Looked for "+words[1]+" and failed.");
   currData.relay.push("You don't see that here.");
