@@ -18,7 +18,7 @@ const itemCommands = [
 ];
 
 const specialCommands = [
-  "save", "load", "again", "g", "restore", "load", "again", "g"
+  "save", "load", "again", "g", "restore", "load", "again", "g", "inventory", "i", "inv"
 ];
 
 const moveCommands = [

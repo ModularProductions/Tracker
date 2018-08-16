@@ -42,7 +42,7 @@ export default function describeRoom(currData, creaturesPresent) {
       }
     }
     if (items.length) {
-      currData.relay.push("You see "+[items.slice(0, -1).join(', '), items.slice(-1)[0]].join(items.length < 2 ? '' : ' and ')+" here.");
+      currData.relay.push("You see "+[items.slice(0, -1).join(', '), items.slice(-1)[0]].join(items.length < 2 ? '' : ', and ')+" here.");
     }
   }
 
