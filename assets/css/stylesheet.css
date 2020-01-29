@@ -1,0 +1,98 @@
+/* fresh stylesheet */
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+html, body {
+    box-sizing: border-box;
+    font-size: 16px;
+    line-height: 150%;
+    height: 100%;
+    margin: 0;
+}
+
+body {
+  
+}
+
+p {
+
+}
+
+a {
+  
+}
+
+h1 {
+  color: red;
+
+}
+
+h2 {
+
+}
+
+ul {
+
+}
+
+li {
+  list-style: none;
+  display: inline-block;
+}
+
+input[type=text], input[type=email], textarea {
+
+}
+
+input[type=submit] {
+
+}
+
+#wrap {
+  min-height: 100%;
+}
+
+#content {
+  padding-bottom: 70px; /* your footer height */
+}
+
+header {
+
+}
+
+nav {
+
+}
+
+section {
+
+}
+
+footer {
+  height: 70px; /* your footer height */
+  margin-top: -70px; /* your footer height as negative amount */
+  overflow: hidden;
+}
+
+/* Tablet Portrait */
+@media screen and (min-width: 600px) {
+  
+}
+
+/* Tablet Landscape */
+@media screen and (min-width: 900px) {
+
+}
+
+/* Desktop */
+@media screen and (min-width: 1200px) {
+
+}
+
+/* Big Desktop */
+@media screen and (min-width: 1800px) {
+
+}
+
